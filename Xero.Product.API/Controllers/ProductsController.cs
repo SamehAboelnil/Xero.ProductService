@@ -29,7 +29,7 @@ namespace Xero.Product.API.Controllers
 
             IEnumerable<Domain.Models.Product> result = await productData.GetAllProducts(name);
             List<Models.Product> products = _mapper.Map<List<Domain.Models.Product>, List<Models.Product>>(result.ToList());
-            return new Models.Products(products);
+            return Ok(new Models.Products(products));
         }
 
         // GET api/product/8f2e9176-35ee-4f0a-ae55-83023d2db1a3
@@ -38,7 +38,7 @@ namespace Xero.Product.API.Controllers
         {
             Domain.Models.Product product = await productData.GetProduct(id);
             Models.Product result = _mapper.Map<Models.Product>(product);
-            return result; 
+            return Ok(result); 
         }
 
         // POST: api/Products
@@ -79,7 +79,6 @@ namespace Xero.Product.API.Controllers
         {
             var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
             Domain.Models.ProductOption result = await productData.UpdateProductOption(id, optionId, newProductOption);
-
             return NoContent();
 
         }
@@ -90,7 +89,7 @@ namespace Xero.Product.API.Controllers
         {
             Domain.Models.Product result = await productData.DeleteProduct(id);
             var deletedProduct = _mapper.Map<Models.Product>(result);
-            return deletedProduct;
+            return Ok(deletedProduct);
         }
 
         [HttpDelete("{id}/options/{optionId}")]
@@ -98,7 +97,7 @@ namespace Xero.Product.API.Controllers
         {
             Domain.Models.ProductOption result = await productData.DeleteProductOption(id, optionId);
             var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
-            return deletedProductOption;
+            return Ok(deletedProductOption);
         }
 
         [HttpGet("{productId}/options")]
@@ -106,7 +105,7 @@ namespace Xero.Product.API.Controllers
         {
             IEnumerable<Domain.Models.ProductOption> result = await productData.GetOptions(productId);
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
-            return new Models.ProductOptions(productOptions);
+            return Ok(new Models.ProductOptions(productOptions));
         }
 
         [HttpGet("{productId}/options/{optionId}")]
@@ -114,7 +113,7 @@ namespace Xero.Product.API.Controllers
         {
             IEnumerable<Domain.Models.ProductOption> result = await productData.GetOptionById(productId, optionId);
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
-            return productOptions;
+            return Ok(productOptions);
         }
     }
 }
