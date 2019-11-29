@@ -6,10 +6,10 @@ using Xero.Product.Data;
 
 namespace Xero.Product.Domain
 {
-    public class ProductData
+    public class ProductService
     {
         private readonly IProductRepository productRepository;
-        public ProductData(IProductRepository productContext)
+        public ProductService(IProductRepository productContext)
         {
             productRepository = productContext;
         }

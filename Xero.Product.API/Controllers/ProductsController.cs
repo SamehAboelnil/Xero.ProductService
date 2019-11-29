@@ -14,12 +14,12 @@ namespace Xero.Product.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly Domain.ProductData productData;
+        private readonly Domain.ProductService productService;
 
         public ProductsController(ProductContext context, IMapper mapper)
         {
             _mapper = mapper;
-            productData = new Domain.ProductData(new ProductRepository(context));
+            productService = new Domain.ProductService(new ProductRepository(context));
         }
 
         // GET api/products
@@ -27,7 +27,7 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.Products>> Get([FromQuery] string name)
         {
 
-            IEnumerable<Domain.Models.ProductData> result = await productData.GetAllProducts(name);
+            IEnumerable<Domain.Models.ProductData> result = await productService.GetAllProducts(name);
             List<Models.ProductData> products = _mapper.Map<List<Domain.Models.ProductData>, List<Models.ProductData>>(result.ToList());
             return Ok(new Models.Products(products));
         }
@@ -36,7 +36,7 @@ namespace Xero.Product.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Models.ProductData>> Get(Guid id)
         {
-            Domain.Models.ProductData product = await productData.GetProduct(id);
+            Domain.Models.ProductData product = await productService.GetProduct(id);
             Models.ProductData result = _mapper.Map<Models.ProductData>(product);
             return Ok(result); 
         }
@@ -47,7 +47,7 @@ namespace Xero.Product.API.Controllers
         {
             var newProduct = _mapper.Map<Domain.Models.ProductData>(product);
 
-            Domain.Models.ProductData result = await productData.AddProduct(newProduct);
+            Domain.Models.ProductData result = await productService.AddProduct(newProduct);
             var addedProduct = _mapper.Map<Models.ProductData>(result);
             return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
         }
@@ -56,62 +56,65 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Models.ProductOption productOption)
         {
             var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-            Domain.Models.ProductOption result = await productData.AddProductOption(newProductOption);
+            Domain.Models.ProductOption result = await productService.AddProductOption(newProductOption);
 
             var addedProductOption = _mapper.Map<Models.ProductOption>(result);
             return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
         }
 
-        // PUT api/values/5
+        // PUT api/Products/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] Models.ProductData product)
         {
             var updatedProduct = _mapper.Map<Domain.Models.ProductData>(product);
-            Domain.Models.ProductData result = await productData.UpdateProduct(id, updatedProduct);
+            Domain.Models.ProductData result = await productService.UpdateProduct(id, updatedProduct);
 
             return NoContent();
 
         }
 
-        // PUT api/values/5
+        // PUT api/Products/5/Options/1
         [HttpPut("{id}/options/{optionId}")]
         public async Task<IActionResult> Put(Guid id, Guid optionId, [FromBody] Models.ProductOption productOption)
         {
             var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-            Domain.Models.ProductOption result = await productData.UpdateProductOption(id, optionId, newProductOption);
+            Domain.Models.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
             return NoContent();
 
         }
 
-        // DELETE api/values/5
+        // DELETE api/Products/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
         {
-            Domain.Models.ProductData result = await productData.DeleteProduct(id);
+            Domain.Models.ProductData result = await productService.DeleteProduct(id);
             var deletedProduct = _mapper.Map<Models.ProductData>(result);
             return Ok(deletedProduct);
         }
 
+        // DELETE api/Products/5/options/1
         [HttpDelete("{id}/options/{optionId}")]
         public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid id, Guid optionId)
         {
-            Domain.Models.ProductOption result = await productData.DeleteProductOption(id, optionId);
+            Domain.Models.ProductOption result = await productService.DeleteProductOption(id, optionId);
             var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
             return Ok(deletedProductOption);
         }
 
+        // GET api/Products/2/options
         [HttpGet("{productId}/options")]
         public async Task<ActionResult<Models.ProductOptions>> GetOptions(Guid productId)
         {
-            IEnumerable<Domain.Models.ProductOption> result = await productData.GetOptions(productId);
+            IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptions(productId);
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
             return Ok(new Models.ProductOptions(productOptions));
         }
 
+        // GET api/Products/2/options/3
         [HttpGet("{productId}/options/{optionId}")]
         public async Task<ActionResult<IEnumerable<Models.ProductOption>>> GetOptionById(Guid productId, Guid optionId)
         {
-            IEnumerable<Domain.Models.ProductOption> result = await productData.GetOptionById(productId, optionId);
+            IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptionById(productId, optionId);
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
             return Ok(productOptions);
         }
