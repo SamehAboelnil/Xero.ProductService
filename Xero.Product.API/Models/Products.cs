@@ -4,11 +4,11 @@ namespace Xero.Product.API.Models
 {
     public class Products
     {
-        public List<Product> items { get; set; }
-        public Products(List<Product> products)//TODO
+        public List<ProductData> Items { get;}
+        public Products(List<ProductData> products)//TODO
         {
-            items = new List<Product>();
-            items.AddRange(products);
+            Items = new List<ProductData>();
+            Items.AddRange(products);
         }
     }
 }

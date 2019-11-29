@@ -8,7 +8,7 @@ namespace Xero.Product.Data
            : base(options)
         {
         }
-        public DbSet<Product> Product { get; set; }
+        public DbSet<ProductData> Product { get; set; }
         public DbSet<ProductOption> ProductOption { get; set; }
 
 

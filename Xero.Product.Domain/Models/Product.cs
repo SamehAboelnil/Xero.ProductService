@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Xero.Product.Domain.Models
 {
-    public class Product
+    public class ProductData
     {
         public Guid Id { get; set; }
 
@@ -15,6 +15,6 @@ namespace Xero.Product.Domain.Models
 
         public decimal DeliveryPrice { get; set; }
 
-        public List<ProductOption> Options { get; set; }
+        public List<ProductOption> Options { get; }
     }
 }

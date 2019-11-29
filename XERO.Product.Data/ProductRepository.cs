@@ -6,27 +6,22 @@ using System.Threading.Tasks;
 
 namespace Xero.Product.Data
 {
-    public class ProductRepository : IProductRepository, IDisposable
+    public class ProductRepository : IProductRepository
     {
         private readonly ProductContext context;
+
 
         public ProductRepository(ProductContext context)
         {
             this.context = context;
         }
 
-        public void Dispose()
-        {
-            Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        public async Task<IEnumerable<Product>> GetAllProducts(string name)
+        public async Task<IEnumerable<ProductData>> GetAllProducts(string name)
         {
             return string.IsNullOrEmpty(name) ? await context.Product.ToListAsync() : await context.Product.Where(p => p.Name == name).ToListAsync();
         }
 
-        public async Task<Product> GetProduct(Guid id)
+        public async Task<ProductData> GetProduct(Guid id)
         {
             return await context.Product.FindAsync(id);
         }
@@ -46,7 +41,7 @@ namespace Xero.Product.Data
         }
 
 
-        public async Task<Product> AddProduct(Product product)
+        public async Task<ProductData> AddProduct(ProductData product)
         {
             context.Product.Add(product);
             await context.SaveChangesAsync();
@@ -54,12 +49,12 @@ namespace Xero.Product.Data
             return product;
         }
 
-        public async Task<Product> UpdateProduct(Guid id, Product product) // should return product?
+        public async Task<ProductData> UpdateProduct(Guid id, ProductData product) // should return product?
         {
 
             if (!ProductExists(id))
             {
-                throw new Exception("Not Found");
+                throw new ProductNotFoundException($"Product Id{id} not found");
             }
 
             context.Entry(product).State = EntityState.Modified;
@@ -68,20 +63,20 @@ namespace Xero.Product.Data
             {
                 await context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException exception) //TODO better exception handling
+            catch (DbUpdateConcurrencyException) //TODO better exception handling
             {
-                throw exception; //todo pattern or custom expceiotn
+                throw; 
             }
 
             return product;
         }
 
-        public async Task<Product> DeleteProduct(Guid id)
+        public async Task<ProductData> DeleteProduct(Guid id)
         {
-            Product product = await context.Product.FindAsync(id);
+            ProductData product = await context.Product.FindAsync(id);
             if (product == null)
             {
-                throw new Exception("Not found exception");
+                throw new ProductNotFoundException();
             }
             context.Product.Remove(product);
             await context.SaveChangesAsync();
@@ -109,12 +104,12 @@ namespace Xero.Product.Data
         {
             if (!ProductExists(id))
             {
-                throw new Exception("Product Not Found");
+                throw new ProductNotFoundException();
             }
 
             if (!ProductOptionExists(optionId))
             {
-                throw new Exception("Product Option not found");
+                throw new ProductOptionNotFoundException();
             }
 
             context.Entry(productOption).State = EntityState.Modified;
@@ -123,9 +118,9 @@ namespace Xero.Product.Data
             {
                 await context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException exception) //TODO better exception handling
+            catch (DbUpdateConcurrencyException) //TODO better exception handling
             {
-                throw exception; //todo pattern or custom expceiotn
+                throw;
             }
 
             return productOption;
@@ -136,7 +131,7 @@ namespace Xero.Product.Data
             ProductOption productOption = await context.ProductOption.Where(p => p.ProductId == productId && p.Id == productOptionId).FirstOrDefaultAsync();
             if (productOption == null)
             {
-                throw new Exception("Not found exception");
+                throw new ProductOptionNotFoundException();
             }
             context.ProductOption.Remove(productOption);
             await context.SaveChangesAsync();

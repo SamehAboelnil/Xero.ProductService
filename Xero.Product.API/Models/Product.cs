@@ -2,7 +2,7 @@
 
 namespace Xero.Product.API.Models
 {
-    public class Product
+    public class ProductData
     {
         public Guid Id { get; set; }
 

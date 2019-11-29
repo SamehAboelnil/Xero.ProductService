@@ -27,28 +27,28 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.Products>> Get([FromQuery] string name)
         {
 
-            IEnumerable<Domain.Models.Product> result = await productData.GetAllProducts(name);
-            List<Models.Product> products = _mapper.Map<List<Domain.Models.Product>, List<Models.Product>>(result.ToList());
+            IEnumerable<Domain.Models.ProductData> result = await productData.GetAllProducts(name);
+            List<Models.ProductData> products = _mapper.Map<List<Domain.Models.ProductData>, List<Models.ProductData>>(result.ToList());
             return Ok(new Models.Products(products));
         }
 
         // GET api/product/8f2e9176-35ee-4f0a-ae55-83023d2db1a3
         [HttpGet("{id}")]
-        public async Task<ActionResult<Models.Product>> Get(Guid id)
+        public async Task<ActionResult<Models.ProductData>> Get(Guid id)
         {
-            Domain.Models.Product product = await productData.GetProduct(id);
-            Models.Product result = _mapper.Map<Models.Product>(product);
+            Domain.Models.ProductData product = await productData.GetProduct(id);
+            Models.ProductData result = _mapper.Map<Models.ProductData>(product);
             return Ok(result); 
         }
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Models.Product>> PostProduct(Models.Product product)
+        public async Task<ActionResult<Models.ProductData>> PostProduct(Models.ProductData product)
         {
-            var newProduct = _mapper.Map<Domain.Models.Product>(product);
+            var newProduct = _mapper.Map<Domain.Models.ProductData>(product);
 
-            Domain.Models.Product result = await productData.AddProduct(newProduct);
-            var addedProduct = _mapper.Map<Models.Product>(result);
+            Domain.Models.ProductData result = await productData.AddProduct(newProduct);
+            var addedProduct = _mapper.Map<Models.ProductData>(result);
             return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
         }
 
@@ -64,10 +64,10 @@ namespace Xero.Product.API.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] Models.Product product)
+        public async Task<IActionResult> Put(Guid id, [FromBody] Models.ProductData product)
         {
-            var updatedProduct = _mapper.Map<Domain.Models.Product>(product);
-            Domain.Models.Product result = await productData.UpdateProduct(id, updatedProduct);
+            var updatedProduct = _mapper.Map<Domain.Models.ProductData>(product);
+            Domain.Models.ProductData result = await productData.UpdateProduct(id, updatedProduct);
 
             return NoContent();
 
@@ -85,10 +85,10 @@ namespace Xero.Product.API.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Models.Product>> Delete(Guid id)
+        public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
         {
-            Domain.Models.Product result = await productData.DeleteProduct(id);
-            var deletedProduct = _mapper.Map<Models.Product>(result);
+            Domain.Models.ProductData result = await productData.DeleteProduct(id);
+            var deletedProduct = _mapper.Map<Models.ProductData>(result);
             return Ok(deletedProduct);
         }
 

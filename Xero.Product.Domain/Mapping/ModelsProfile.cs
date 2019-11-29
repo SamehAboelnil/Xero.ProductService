@@ -6,7 +6,7 @@ namespace Xero.Product.Domain
     {
         public ModelsProfile()
         {
-            CreateMap<Models.Product, Data.Product>().ReverseMap();
+            CreateMap<Models.ProductData, Data.ProductData>().ReverseMap();
             CreateMap<Models.ProductOption, Data.ProductOption>().ReverseMap();
         }
     }
