@@ -37,6 +37,8 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.ProductData>> Get(Guid id)
         {
             Domain.Models.ProductData product = await productService.GetProduct(id);
+            if (product == null)
+                return NotFound($"Product id {id} not found ");
             Models.ProductData result = _mapper.Map<Models.ProductData>(product);
             return Ok(result); 
         }
@@ -88,15 +90,21 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
         {
             Domain.Models.ProductData result = await productService.DeleteProduct(id);
+
+            if (result == null)
+                return NotFound($"No product found with {id} value");
+
             var deletedProduct = _mapper.Map<Models.ProductData>(result);
             return Ok(deletedProduct);
         }
 
         // DELETE api/Products/5/options/1
         [HttpDelete("{id}/options/{optionId}")]
-        public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid id, Guid optionId)
+        public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid productId, Guid optionId)
         {
-            Domain.Models.ProductOption result = await productService.DeleteProductOption(id, optionId);
+            Domain.Models.ProductOption result = await productService.DeleteProductOption(productId, optionId);
+            if (result == null)
+                return NotFound($"No product option found with product id {productId} and optionId {optionId}");
             var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
             return Ok(deletedProductOption);
         }
@@ -106,6 +114,8 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.ProductOptions>> GetOptions(Guid productId)
         {
             IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptions(productId);
+            if (result == null)
+                return NotFound($"No options found with {productId} value");
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
             return Ok(new Models.ProductOptions(productOptions));
         }
@@ -115,6 +125,8 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<IEnumerable<Models.ProductOption>>> GetOptionById(Guid productId, Guid optionId)
         {
             IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptionById(productId, optionId);
+            if (result == null)
+                return NotFound($"No product option found with product id {productId} and optionId {optionId}");
             List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
             return Ok(productOptions);
         }
