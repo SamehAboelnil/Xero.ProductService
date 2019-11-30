@@ -55,10 +55,10 @@ namespace Xero.Product.API.Controllers
         }
 
         [HttpPost("{productId}/options")]
-        public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Models.ProductOption productOption)
+        public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Guid productId, Models.ProductOption productOption)
         {
             var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-            Domain.Models.ProductOption result = await productService.AddProductOption(newProductOption);
+            Domain.Models.ProductOption result = await productService.AddProductOption(productId, newProductOption);
 
             var addedProductOption = _mapper.Map<Models.ProductOption>(result);
             return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);

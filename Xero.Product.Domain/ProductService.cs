@@ -45,10 +45,10 @@ namespace Xero.Product.Domain
             return Mapping.Mapper.Map<Models.ProductData>(addedProduct);
         }
 
-        public async Task<Models.ProductOption> AddProductOption(Models.ProductOption productOption)
+        public async Task<Models.ProductOption> AddProductOption(Guid productId, Models.ProductOption productOption)
         {
             // Business Logic here
-            ProductOption AddedProductOption = await productRepository.AddProductOption(Mapping.Mapper.Map<ProductOption>(productOption));
+            ProductOption AddedProductOption = await productRepository.AddProductOption(productId, Mapping.Mapper.Map<ProductOption>(productOption));
             return Mapping.Mapper.Map<Models.ProductOption>(AddedProductOption);
         }
 

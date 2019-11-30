@@ -15,6 +15,15 @@ namespace Xero.Product.Data
 
         public decimal DeliveryPrice { get; set; }
 
-        public List<ProductOption> Options { get; }
+        public List<ProductOption> Options { get; set; }
+
+        public void AddOption(ProductOption option)
+        {
+            if (Options == null)
+                Options = new List<ProductOption>();
+            Options.Add(option);
+
+
+        }
     }
 }

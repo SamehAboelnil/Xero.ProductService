@@ -32,12 +32,18 @@ namespace Xero.Product.Data
             return await context.ProductOption.Where(p => p.ProductId == productId).ToListAsync();
         }
 
-        public async Task<ProductOption> AddProductOption(ProductOption productOption)
+        public async Task<ProductOption> AddProductOption(Guid productId, ProductOption productOption)
         {
-            context.ProductOption.Add(productOption);
+            if (!ProductExists(productId))
+            {
+                throw new ProductNotFoundException($"Product Id{productId} not found");
+            }
+
+            var product = await context.Product.FindAsync(productId);
+            product.AddOption(productOption);
             await context.SaveChangesAsync();
 
-            return productOption; // TODO what should we return
+            return productOption;
         }
 
 
@@ -49,12 +55,12 @@ namespace Xero.Product.Data
             return product;
         }
 
-        public async Task<ProductData> UpdateProduct(Guid id, ProductData product) // should return product?
+        public async Task<ProductData> UpdateProduct(Guid productId, ProductData product) // should return product?
         {
 
-            if (!ProductExists(id))
+            if (!ProductExists(productId))
             {
-                throw new ProductNotFoundException($"Product Id{id} not found");
+                throw new ProductNotFoundException($"Product Id{productId} not found");
             }
 
             context.Entry(product).State = EntityState.Modified;
@@ -138,5 +144,6 @@ namespace Xero.Product.Data
 
             return productOption;
         }
+
     }
 }

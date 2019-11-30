@@ -8,7 +8,7 @@ namespace Xero.Product.Data
     {
         Task<ProductData> AddProduct(ProductData product);
 
-        Task<ProductOption> AddProductOption(ProductOption productOption);
+        Task<ProductOption> AddProductOption(Guid productId, ProductOption productOption);
         Task<ProductData> DeleteProduct(Guid id);
 
         Task<ProductOption> DeleteProductOption(Guid productId, Guid productOptionId);
