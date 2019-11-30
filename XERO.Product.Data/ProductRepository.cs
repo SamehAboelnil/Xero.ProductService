@@ -21,9 +21,13 @@ namespace Xero.Product.Data
             return string.IsNullOrEmpty(name) ? await context.Product.ToListAsync() : await context.Product.Where(p => p.Name == name).ToListAsync();
         }
 
-        public async Task<ProductData> GetProduct(Guid id)
+        public async Task<ProductData> GetProduct(Guid productId)
         {
-            return await context.Product.FindAsync(id);
+            if (!ProductExists(productId))
+            {
+                throw new ProductNotFoundException($"Product Id{productId} not found");
+            }
+            return await context.Product.FindAsync(productId);
         }
 
         public async Task<IEnumerable<ProductOption>> GetOptions(Guid productId)
@@ -132,9 +136,14 @@ namespace Xero.Product.Data
 
             try
             {
+                var product = await context.Product.FindAsync(id);
+                var option = product.Options.Where(x => x.Id == optionId).FirstOrDefault();
+                option = productOption;
+
+                
                 await context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) //TODO better exception handling
+            catch (DbUpdateConcurrencyException)
             {
                 throw;
             }

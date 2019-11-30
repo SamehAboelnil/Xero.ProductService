@@ -48,7 +48,7 @@ namespace Xero.Product.API.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error");
             }
         }
 
@@ -56,11 +56,18 @@ namespace Xero.Product.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Models.ProductData>> PostProduct(Models.ProductData product)
         {
-            var newProduct = _mapper.Map<Domain.Models.ProductData>(product);
+            try
+            {
+                var newProduct = _mapper.Map<Domain.Models.ProductData>(product);
 
-            Domain.Models.ProductData result = await productService.AddProduct(newProduct);
-            var addedProduct = _mapper.Map<Models.ProductData>(result);
-            return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
+                Domain.Models.ProductData result = await productService.AddProduct(newProduct);
+                var addedProduct = _mapper.Map<Models.ProductData>(result);
+                return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
+            }
+            catch
+            {
+                return StatusCode(500, "Server error");
+            }
         }
 
         [HttpPost("{id}/options")]
@@ -123,9 +130,9 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch (Exception)
+            catch (Exception error)
             {
-                return StatusCode(500);
+                return StatusCode(500, error);
             }
 
         }
