@@ -89,11 +89,20 @@ namespace Xero.Product.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
         {
-            Domain.Models.ProductData result = await productService.DeleteProduct(id);
-
-            if (result == null)
+            Domain.Models.ProductData result;
+            try
+            {
+                result = await productService.DeleteProduct(id);
+            }
+            catch(ProductNotFoundException)
+            {
                 return NotFound($"No product found with {id} value");
-
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+                            
             var deletedProduct = _mapper.Map<Models.ProductData>(result);
             return Ok(deletedProduct);
         }
