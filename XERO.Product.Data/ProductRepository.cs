@@ -77,13 +77,14 @@ namespace Xero.Product.Data
             return product;
         }
 
-        public async Task<ProductData> DeleteProduct(Guid id)
+        public async Task<ProductData> DeleteProduct(Guid productId)
         {
-            ProductData product = await context.Product.FindAsync(id);
-            if (product == null)
+            if (!ProductExists(productId))
             {
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException($"Product Id{productId} not found");
             }
+
+            ProductData product = await context.Product.FindAsync(productId);
             context.Product.Remove(product);
             await context.SaveChangesAsync();
 
@@ -102,6 +103,15 @@ namespace Xero.Product.Data
 
         public async Task<IEnumerable<ProductOption>> GetOptionById(Guid productId, Guid OptionId)
         {
+            if (!ProductExists(productId))
+            {
+                throw new ProductNotFoundException();
+            }
+
+            if (!ProductOptionExists(OptionId))
+            {
+                throw new ProductOptionNotFoundException();
+            }
             List<ProductOption> result = await context.ProductOption.ToListAsync();
             return await context.ProductOption.Where(p => p.Id == OptionId && p.ProductId == productId).ToListAsync();
         }
@@ -134,11 +144,17 @@ namespace Xero.Product.Data
 
         public async Task<ProductOption> DeleteProductOption(Guid productId, Guid productOptionId)
         {
-            ProductOption productOption = await context.ProductOption.Where(p => p.ProductId == productId && p.Id == productOptionId).FirstOrDefaultAsync();
-            if (productOption == null)
+            if (!ProductExists(productId))
+            {
+                throw new ProductNotFoundException();
+            }
+
+            if (!ProductOptionExists(productOptionId))
             {
                 throw new ProductOptionNotFoundException();
             }
+
+            ProductOption productOption = await context.ProductOption.Where(p => p.ProductId == productId && p.Id == productOptionId).FirstOrDefaultAsync();
             context.ProductOption.Remove(productOption);
             await context.SaveChangesAsync();
 

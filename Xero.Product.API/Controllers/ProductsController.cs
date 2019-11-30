@@ -36,11 +36,20 @@ namespace Xero.Product.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Models.ProductData>> Get(Guid id)
         {
-            Domain.Models.ProductData product = await productService.GetProduct(id);
-            if (product == null)
-                return NotFound($"Product id {id} not found ");
-            Models.ProductData result = _mapper.Map<Models.ProductData>(product);
-            return Ok(result); 
+            try
+            {
+                Domain.Models.ProductData product = await productService.GetProduct(id);
+                Models.ProductData result = _mapper.Map<Models.ProductData>(product);
+                return Ok(result);
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         // POST: api/Products
@@ -54,34 +63,70 @@ namespace Xero.Product.API.Controllers
             return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
         }
 
-        [HttpPost("{productId}/options")]
-        public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Guid productId, Models.ProductOption productOption)
+        [HttpPost("{id}/options")]
+        public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Guid id, Models.ProductOption productOption)
         {
-            var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-            Domain.Models.ProductOption result = await productService.AddProductOption(productId, newProductOption);
+            try
+            {
+                var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
+                Domain.Models.ProductOption result = await productService.AddProductOption(id, newProductOption);
 
-            var addedProductOption = _mapper.Map<Models.ProductOption>(result);
-            return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
+                var addedProductOption = _mapper.Map<Models.ProductOption>(result);
+                return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         // PUT api/Products/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] Models.ProductData product)
         {
-            var updatedProduct = _mapper.Map<Domain.Models.ProductData>(product);
-            Domain.Models.ProductData result = await productService.UpdateProduct(id, updatedProduct);
+            try
+            {
+                var updatedProduct = _mapper.Map<Domain.Models.ProductData>(product);
+                Domain.Models.ProductData result = await productService.UpdateProduct(id, updatedProduct);
 
-            return NoContent();
-
+                return NoContent();
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         // PUT api/Products/5/Options/1
         [HttpPut("{id}/options/{optionId}")]
         public async Task<IActionResult> Put(Guid id, Guid optionId, [FromBody] Models.ProductOption productOption)
         {
-            var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-            Domain.Models.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
-            return NoContent();
+            try
+            {
+                var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
+                Domain.Models.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
+                return NoContent();
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (ProductOptionNotFoundException)
+            {
+                return NotFound($"No product option found with {optionId} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
 
         }
 
@@ -89,10 +134,11 @@ namespace Xero.Product.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
         {
-            Domain.Models.ProductData result;
             try
             {
-                result = await productService.DeleteProduct(id);
+                Domain.Models.ProductData result = await productService.DeleteProduct(id);
+                var deletedProduct = _mapper.Map<Models.ProductData>(result);
+                return Ok(deletedProduct);
             }
             catch(ProductNotFoundException)
             {
@@ -102,42 +148,80 @@ namespace Xero.Product.API.Controllers
             {
                 return StatusCode(500);
             }
-                            
-            var deletedProduct = _mapper.Map<Models.ProductData>(result);
-            return Ok(deletedProduct);
         }
 
         // DELETE api/Products/5/options/1
         [HttpDelete("{id}/options/{optionId}")]
-        public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid productId, Guid optionId)
+        public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid id, Guid optionId)
         {
-            Domain.Models.ProductOption result = await productService.DeleteProductOption(productId, optionId);
-            if (result == null)
-                return NotFound($"No product option found with product id {productId} and optionId {optionId}");
-            var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
-            return Ok(deletedProductOption);
+            try
+            {
+                Domain.Models.ProductOption result = await productService.DeleteProductOption(id, optionId);
+                var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
+                return Ok(deletedProductOption);
+            }
+            catch(ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (ProductOptionNotFoundException)
+            {
+                return NotFound($"No product option found with {optionId} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
         }
 
         // GET api/Products/2/options
-        [HttpGet("{productId}/options")]
-        public async Task<ActionResult<Models.ProductOptions>> GetOptions(Guid productId)
+        [HttpGet("{id}/options")]
+        public async Task<ActionResult<Models.ProductOptions>> GetOptions(Guid id)
         {
-            IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptions(productId);
-            if (result == null)
-                return NotFound($"No options found with {productId} value");
-            List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
-            return Ok(new Models.ProductOptions(productOptions));
+            try
+            {
+                IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptions(id);
+                if (result == null)
+                    return NotFound($"No options found with {id} value");
+                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
+                return Ok(new Models.ProductOptions(productOptions));
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         // GET api/Products/2/options/3
-        [HttpGet("{productId}/options/{optionId}")]
-        public async Task<ActionResult<IEnumerable<Models.ProductOption>>> GetOptionById(Guid productId, Guid optionId)
+        [HttpGet("{id}/options/{optionId}")]
+        public async Task<ActionResult<IEnumerable<Models.ProductOption>>> GetOptionById(Guid id, Guid optionId)
         {
-            IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptionById(productId, optionId);
-            if (result == null)
-                return NotFound($"No product option found with product id {productId} and optionId {optionId}");
-            List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
-            return Ok(productOptions);
+            try
+            {
+                IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptionById(id, optionId);
+                if (result == null)
+                    return NotFound($"No product option found with product id {id} and optionId {optionId}");
+                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
+                return Ok(productOptions);
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound($"No product found with {id} value");
+            }
+            catch (ProductOptionNotFoundException)
+            {
+                return NotFound($"No product option found with {optionId} value");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
         }
     }
 }
