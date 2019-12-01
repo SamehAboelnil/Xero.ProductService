@@ -15,11 +15,13 @@ namespace Xero.Product.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly Domain.ProductService productService;
+        private readonly IProductRepository productRepository;
 
-        public ProductsController(ProductContext context, IMapper mapper)
+        public ProductsController(IProductRepository productRepository, IMapper mapper)
         {
             _mapper = mapper;
-            productService = new Domain.ProductService(new ProductRepository(context));
+            this.productRepository = productRepository;
+            productService = new Domain.ProductService(productRepository);
         }
 
         // GET api/products

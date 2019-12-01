@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -7,13 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Xero.Product.Data;
-using Xunit;
 
-namespace Xero.Product.API.UnitTests
+
+namespace Xero.Product.API.UnitTests.Controllers
 {
-    public class UnitTest1
+
+    [TestClass]
+    public class ProductControllerTest
     {
-        [Fact]
+        [TestMethod]
         public async void Get_Return_Products_OK_Wehn_DataRepo_Have_Products()
         {
             var result = new List<ProductData>();
@@ -23,25 +25,25 @@ namespace Xero.Product.API.UnitTests
                 .Setup(repo => repo.GetAllProducts(It.IsAny<string>()))
                 .Returns(Task.FromResult(result.AsEnumerable()));
 
-
+            
             Lazy<IMapper> Lazy = new Lazy<IMapper>(() =>
             {
                 MapperConfiguration config = new MapperConfiguration(cfg =>
                 {
-                    // This line ensures that internal properties are also mapped over.
-                    cfg.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+                     // This line ensures that internal properties are also mapped over.
+                     cfg.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
                     cfg.AddProfile<ModelsProfile>();
                 });
                 IMapper mapper = config.CreateMapper();
                 return mapper;
             });
 
-            IMapper Mapper = Lazy.Value;
+        IMapper Mapper = Lazy.Value;
 
             Xero.Product.API.Controllers.ProductsController productsController = new API.Controllers.ProductsController(mockProductRepository.Object, Mapper);
             var result1 = await productsController.Get("TestName");
 
 
-        }
+    }
     }
 }

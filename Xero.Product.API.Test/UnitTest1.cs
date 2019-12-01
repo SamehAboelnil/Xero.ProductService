@@ -7,14 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Xero.Product.Data;
-using Xunit;
+using Xero.Product.API;
+using Xero.Product.API;
 
 namespace Xero.Product.API.UnitTests
 {
+    [TestClass]
     public class UnitTest1
     {
-        [Fact]
-        public async void Get_Return_Products_OK_Wehn_DataRepo_Have_Products()
+        [TestMethod]
+        public async Task Get_Return_Products_OK_Wehn_DataRepo_Have_Products()
         {
             var result = new List<ProductData>();
             result.Add(new ProductData { DeliveryPrice = 2, Description = "Test", Id = Guid.NewGuid(), Name = " TestName", Price = 123 });

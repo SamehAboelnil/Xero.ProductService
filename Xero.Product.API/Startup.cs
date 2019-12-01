@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Xero.Product.Data;
 
 namespace Xero.Product.API
 {
@@ -27,6 +27,8 @@ namespace Xero.Product.API
 
             services.AddDbContext<Data.ProductContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("xeroproductsserviceContext")));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

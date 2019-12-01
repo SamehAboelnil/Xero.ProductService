@@ -17,7 +17,7 @@ namespace Xero.Product.Data
         }
 
         public async Task<IEnumerable<ProductData>> GetAllProducts(string name)
-        {
+        {   
             return string.IsNullOrEmpty(name) ? await context.Product.ToListAsync() : await context.Product.Where(p => p.Name == name).ToListAsync();
         }
 
