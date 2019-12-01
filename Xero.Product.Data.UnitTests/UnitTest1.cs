@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Xero.Product.API.UnitTests
+namespace Xero.Product.Data.UnitTests
 {
     [TestClass]
     public class UnitTest1

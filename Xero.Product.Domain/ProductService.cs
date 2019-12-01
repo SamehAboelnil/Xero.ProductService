@@ -9,9 +9,9 @@ namespace Xero.Product.Domain
     public class ProductService
     {
         private readonly IProductRepository productRepository;
-        public ProductService(IProductRepository productContext)
+        public ProductService(IProductRepository productRepository)
         {
-            productRepository = productContext;
+            this.productRepository = productRepository;
         }
 
         public async Task<IEnumerable<Models.ProductData>> GetAllProducts(string name)
