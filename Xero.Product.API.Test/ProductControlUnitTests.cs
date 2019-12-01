@@ -9,11 +9,13 @@ using System.Linq;
 using Xero.Product.Data;
 using Xero.Product.API;
 using Xero.Product.API;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Xero.Product.API.UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ProductControlUnitTests
     {
         [TestMethod]
         public async Task Get_Return_Products_OK_Wehn_DataRepo_Have_Products()
@@ -43,6 +45,9 @@ namespace Xero.Product.API.UnitTests
             Xero.Product.API.Controllers.ProductsController productsController = new API.Controllers.ProductsController(mockProductRepository.Object, Mapper);
             var result1 = await productsController.Get("TestName");
 
+            
+            var statusCode = result1.Result;
+            Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
 
         }
     }
