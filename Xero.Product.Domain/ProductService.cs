@@ -14,66 +14,110 @@ namespace Xero.Product.Domain
             this.productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Models.ProductData>> GetAllProducts(string name)
+        public async Task<IEnumerable<Domain.ProductData>> GetAllProducts(string name)
         {
             IEnumerable<Data.ProductData> products = await productRepository.GetAllProducts(name);
-            return products.Select(x => Mapping.Mapper.Map<Models.ProductData>(x)).ToList();
+            return products.Select(x => Mapping.Mapper.Map<Domain.ProductData>(x)).ToList();
 
         }
 
-        public async Task<Models.ProductData> GetProduct(Guid id)
+        public async Task<Domain.ProductData> GetProduct(Guid id)
         {
+            if (!await ProductExists(id))
+            {
+                throw new ProductNotFoundException($"Product Id{id} not found");
+            }
             Data.ProductData product = await productRepository.GetProduct(id);
-            return Mapping.Mapper.Map<Models.ProductData>(product);
+            return Mapping.Mapper.Map<Domain.ProductData>(product);
         }
 
-        public async Task<IEnumerable<Models.ProductOption>> GetOptions(Guid productId)
+        public async Task<IEnumerable<Domain.ProductOption>> GetOptions(Guid productId)
         {
             IEnumerable<ProductOption> productOptions = await productRepository.GetOptions(productId);
-            return productOptions.Select(x => Mapping.Mapper.Map<Models.ProductOption>(x));
+            return productOptions.Select(x => Mapping.Mapper.Map<Domain.ProductOption>(x));
         }
 
-        public async Task<IEnumerable<Domain.Models.ProductOption>> GetOptionById(Guid productId, Guid optionId)
+        public async Task<IEnumerable<Product.Domain.Domain.ProductOption>> GetOptionById(Guid productId, Guid optionId)
         {
+            if (!await ProductOptionExists(productId, optionId))
+            {
+                throw new ProductOptionNotFoundException();
+            }
             var productOptions = await productRepository.GetOptionById(productId, optionId);
-            return productOptions.Select(x => Mapping.Mapper.Map<Models.ProductOption>(x));
+            return productOptions.Select(x => Mapping.Mapper.Map<Domain.ProductOption>(x));
         }
 
-        public async Task<Models.ProductData> AddProduct(Models.ProductData product)
+        public async Task<Domain.ProductData> AddProduct(Domain.ProductData product)
         {
-            Data.ProductData addedProduct = await productRepository.AddProduct(Mapping.Mapper.Map<Data.ProductData>(product));
-            return Mapping.Mapper.Map<Models.ProductData>(addedProduct);
+            ProductData addedProduct = await productRepository.AddProduct(Mapping.Mapper.Map<Data.ProductData>(product));
+            return Mapping.Mapper.Map<Domain.ProductData>(addedProduct);
         }
 
-        public async Task<Models.ProductOption> AddProductOption(Guid productId, Models.ProductOption productOption)
+        public async Task<Domain.ProductOption> AddProductOption(Guid productId, Domain.ProductOption productOption)
         {
+            if (!await ProductExists(productId))
+            {
+                throw new ProductNotFoundException($"Product Id{productId} not found");
+            }
             // Business Logic here
             ProductOption AddedProductOption = await productRepository.AddProductOption(productId, Mapping.Mapper.Map<ProductOption>(productOption));
-            return Mapping.Mapper.Map<Models.ProductOption>(AddedProductOption);
+            return Mapping.Mapper.Map<Domain.ProductOption>(AddedProductOption);
         }
 
-        public async Task<Models.ProductData> UpdateProduct(Guid id, Models.ProductData product)
+        public async Task<Domain.ProductData> UpdateProduct(Guid id, Domain.ProductData product)
         {
-            Data.ProductData updatedProduct = await productRepository.UpdateProduct(id, Mapping.Mapper.Map<Data.ProductData>(product));
-            return Mapping.Mapper.Map<Models.ProductData>(updatedProduct);
+            if (!await ProductExists(id))
+            {
+                throw new ProductNotFoundException($"Product Id{id} not found");
+            }
+            ProductData updatedProduct = await productRepository.UpdateProduct(id, Mapping.Mapper.Map<Data.ProductData>(product));
+            return Mapping.Mapper.Map<Domain.ProductData>(updatedProduct);
         }
 
-        public async Task<Models.ProductOption> UpdateProductOption(Guid id, Guid optionId, Models.ProductOption productOption)
+        public async Task<Domain.ProductOption> UpdateProductOption(Guid id, Guid optionId, Domain.ProductOption productOption)
         {
+
+            if (!await ProductOptionExists(id, optionId))
+            {
+                throw new ProductOptionNotFoundException();
+            }
             ProductOption updatedProductOption = await productRepository.UpdateProductOption(id, optionId, Mapping.Mapper.Map<ProductOption>(productOption));
-            return Mapping.Mapper.Map<Models.ProductOption>(updatedProductOption);
+            return Mapping.Mapper.Map<Domain.ProductOption>(updatedProductOption);
         }
 
-        public async Task<Models.ProductData> DeleteProduct(Guid id)
+        public async Task<Domain.ProductData> DeleteProduct(Guid id)
         {
+            if (!await ProductExists(id))
+            {
+                throw new ProductNotFoundException($"Product Id{id} not found");
+            }
             Data.ProductData deletedProduct = await productRepository.DeleteProduct(id);
-            return Mapping.Mapper.Map<Models.ProductData>(deletedProduct);
+            return Mapping.Mapper.Map<Domain.ProductData>(deletedProduct);
         }
 
-        public async Task<Models.ProductOption> DeleteProductOption(Guid productId, Guid ProductOptionId)
+        public async Task<Domain.ProductOption> DeleteProductOption(Guid productId, Guid ProductOptionId)
         {
+            if (!await ProductOptionExists(productId, ProductOptionId))
+            {
+                throw new ProductOptionNotFoundException();
+            }
             ProductOption deletedProductOption = await productRepository.DeleteProductOption(productId, ProductOptionId); ;
-            return Mapping.Mapper.Map<Models.ProductOption>(deletedProductOption);
+            return Mapping.Mapper.Map<Domain.ProductOption>(deletedProductOption);
+        }
+
+
+        private async Task<bool> ProductExists(Guid id)
+        {
+            if (await productRepository.GetProduct(id) == null)
+                return false;
+            return true;
+        }
+
+        private async Task<bool> ProductOptionExists(Guid productId, Guid optionId)
+        {
+            if (await productRepository.GetOptionById(productId, optionId) == null)
+                return false;
+            return true;
         }
     }
 }

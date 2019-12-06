@@ -29,8 +29,8 @@ namespace Xero.Product.API.Controllers
         public async Task<ActionResult<Models.Products>> Get([FromQuery] string name)
         {
 
-            IEnumerable<Domain.Models.ProductData> result = await productService.GetAllProducts(name);
-            List<Models.ProductData> products = _mapper.Map<List<Domain.Models.ProductData>, List<Models.ProductData>>(result.ToList());
+            IEnumerable<Domain.Domain.ProductData> result = await productService.GetAllProducts(name);
+            List<Models.ProductData> products = _mapper.Map<List<Domain.Domain.ProductData>, List<Models.ProductData>>(result.ToList());
             return Ok(new Models.Products(products));
         }
 
@@ -40,7 +40,7 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                Domain.Models.ProductData product = await productService.GetProduct(id);
+                Domain.Domain.ProductData product = await productService.GetProduct(id);
                 Models.ProductData result = _mapper.Map<Models.ProductData>(product);
                 return Ok(result);
             }
@@ -60,9 +60,9 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var newProduct = _mapper.Map<Domain.Models.ProductData>(product);
+                var newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
 
-                Domain.Models.ProductData result = await productService.AddProduct(newProduct);
+                Domain.Domain.ProductData result = await productService.AddProduct(newProduct);
                 var addedProduct = _mapper.Map<Models.ProductData>(result);
                 return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
             }
@@ -73,12 +73,12 @@ namespace Xero.Product.API.Controllers
         }
 
         [HttpPost("{id}/options")]
-        public async Task<ActionResult<Domain.Models.ProductOption>> PostProductOption(Guid id, Models.ProductOption productOption)
+        public async Task<ActionResult<Domain.Domain.ProductOption>> PostProductOption(Guid id, Models.ProductOption productOption)
         {
             try
             {
-                var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-                Domain.Models.ProductOption result = await productService.AddProductOption(id, newProductOption);
+                var newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                Domain.Domain.ProductOption result = await productService.AddProductOption(id, newProductOption);
 
                 var addedProductOption = _mapper.Map<Models.ProductOption>(result);
                 return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
@@ -99,8 +99,8 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var updatedProduct = _mapper.Map<Domain.Models.ProductData>(product);
-                Domain.Models.ProductData result = await productService.UpdateProduct(id, updatedProduct);
+                var updatedProduct = _mapper.Map<Domain.Domain.ProductData>(product);
+                Domain.Domain.ProductData result = await productService.UpdateProduct(id, updatedProduct);
 
                 return NoContent();
             }
@@ -120,8 +120,8 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var newProductOption = _mapper.Map<Domain.Models.ProductOption>(productOption);
-                Domain.Models.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
+                var newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                Domain.Domain.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
                 return NoContent();
             }
             catch (ProductNotFoundException)
@@ -145,7 +145,7 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                Domain.Models.ProductData result = await productService.DeleteProduct(id);
+                Domain.Domain.ProductData result = await productService.DeleteProduct(id);
                 var deletedProduct = _mapper.Map<Models.ProductData>(result);
                 return Ok(deletedProduct);
             }
@@ -165,7 +165,7 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                Domain.Models.ProductOption result = await productService.DeleteProductOption(id, optionId);
+                Domain.Domain.ProductOption result = await productService.DeleteProductOption(id, optionId);
                 var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
                 return Ok(deletedProductOption);
             }
@@ -190,10 +190,10 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptions(id);
+                IEnumerable<Domain.Domain.ProductOption> result = await productService.GetOptions(id);
                 if (result == null)
                     return NotFound($"No options found with {id} value");
-                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
+                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Models.ProductOption>>(result.ToList());
                 return Ok(new Models.ProductOptions(productOptions));
             }
             catch (ProductNotFoundException)
@@ -212,10 +212,10 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                IEnumerable<Domain.Models.ProductOption> result = await productService.GetOptionById(id, optionId);
+                IEnumerable<Domain.Domain.ProductOption> result = await productService.GetOptionById(id, optionId);
                 if (result == null)
                     return NotFound($"No product option found with product id {id} and optionId {optionId}");
-                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Models.ProductOption>, List<Models.ProductOption>>(result.ToList());
+                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Models.ProductOption>>(result.ToList());
                 return Ok(productOptions);
             }
             catch (ProductNotFoundException)

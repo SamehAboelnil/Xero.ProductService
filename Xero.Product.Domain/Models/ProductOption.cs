@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xero.Product.Domain.Models
+namespace Xero.Product.Domain.Domain
 {
     public class ProductOption
     {

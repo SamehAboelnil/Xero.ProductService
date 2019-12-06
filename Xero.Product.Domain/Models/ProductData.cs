@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Xero.Product.Domain.Models
+namespace Xero.Product.Domain.Domain
 {
     public class ProductData
     {
