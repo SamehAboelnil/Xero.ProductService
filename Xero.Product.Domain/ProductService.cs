@@ -37,14 +37,14 @@ namespace Xero.Product.Domain
             return productOptions.Select(x => Mapping.Mapper.Map<Domain.ProductOption>(x));
         }
 
-        public async Task<IEnumerable<Product.Domain.Domain.ProductOption>> GetOptionById(Guid productId, Guid optionId)
+        public async Task<Product.Domain.Domain.ProductOption> GetOptionById(Guid productId, Guid optionId)
         {
             if (!await ProductOptionExists(productId, optionId))
             {
                 throw new ProductOptionNotFoundException();
             }
             var productOptions = await productRepository.GetOptionById(productId, optionId);
-            return productOptions.Select(x => Mapping.Mapper.Map<Domain.ProductOption>(x));
+            return Mapping.Mapper.Map<Domain.ProductOption>(productOptions);
         }
 
         public async Task<Domain.ProductData> AddProduct(Domain.ProductData product)

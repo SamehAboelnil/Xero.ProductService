@@ -9,8 +9,6 @@ namespace Xero.Product.Data
     public class ProductRepository : IProductRepository
     {
         private readonly ProductContext context;
-
-
         public ProductRepository(ProductContext context)
         {
             this.context = context;
@@ -72,10 +70,10 @@ namespace Xero.Product.Data
             return product;
         }
 
-        public async Task<IEnumerable<ProductOption>> GetOptionById(Guid productId, Guid optionId)
+        public async Task<ProductOption> GetOptionById(Guid productId, Guid optionId)
         {
             List<ProductOption> result = await context.ProductOption.ToListAsync();
-            return await context.ProductOption.Where(p => p.Id == optionId && p.ProductId == productId).ToListAsync();
+            return await context.ProductOption.Where(p => p.Id == optionId && p.ProductId == productId).FirstAsync();
         }
 
         public async Task<ProductOption> UpdateProductOption(Guid id, Guid optionId, ProductOption productOption)

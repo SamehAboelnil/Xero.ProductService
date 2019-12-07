@@ -212,11 +212,9 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                IEnumerable<Domain.Domain.ProductOption> result = await productService.GetOptionById(id, optionId);
-                if (result == null)
-                    return NotFound($"No product option found with product id {id} and optionId {optionId}");
-                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Models.ProductOption>>(result.ToList());
-                return Ok(productOptions);
+                Domain.Domain.ProductOption result = await productService.GetOptionById(id, optionId);
+                Models.ProductOption productOption = _mapper.Map<Models.ProductOption>(result);  
+                return Ok(productOption);
             }
             catch (ProductNotFoundException)
             {

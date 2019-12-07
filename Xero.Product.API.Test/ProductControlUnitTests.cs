@@ -38,7 +38,7 @@ namespace Xero.Product.API.UnitTests
             Mapper = Lazy.Value;
         }
         [TestMethod]
-        public async Task Get_Return_Products_OK_When_DataRepo_Have_Products()
+        public async Task Get_Return_Products_OK_WHEN_DataRepo_Have_Products()
         {
             List<ProductData> resultWithOneRecord = new List<ProductData>
             {
@@ -61,12 +61,10 @@ namespace Xero.Product.API.UnitTests
             var result = statusCode as OkObjectResult;
             var response = result.Value;
             response.Should().BeEquivalentTo(productsResponse);
-
-
         }
 
         [TestMethod]
-        public async Task Get_BY_ID_Return_Not_Found_When_DataRepo_Have_No_Products()
+        public async Task GetById_RETURN_Not_Found_WHEN_DataRepo_Have_No_Products()
         {
             var mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
@@ -80,7 +78,7 @@ namespace Xero.Product.API.UnitTests
         }
 
         [TestMethod]
-        public async Task Get_BY_ID_Return_Product_OK_Wehn_DataRepo_Have_No_Products()
+        public async Task GetById_Return_Product_OK_WHEN_DataRepo_HaveProducts()
         {
             Models.ProductData productResponse = new API.Models.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
@@ -99,7 +97,66 @@ namespace Xero.Product.API.UnitTests
             var response = result.Value;
             response.Should().BeEquivalentTo(productResponse);
 
+        }
 
+        [TestMethod]
+        public async Task GetById_RETURN_ProductOption_OK_WHEN_DataRepo_HAVE_THE_PRODUCT_OPTION()
+        {
+            Models.ProductOption productOptionResponse = new Models.ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid};
+            ProductOption resultOneProduct = new ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid };
+
+            var mockProductRepository = new Mock<IProductRepository>();
+            mockProductRepository
+                .Setup(repo => repo.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .Returns(Task.FromResult(resultOneProduct));
+
+            var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
+            var statusCode = result1.Result;
+            Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
+
+            var result = statusCode as OkObjectResult;
+            var response = result.Value;
+            response.Should().BeEquivalentTo(productOptionResponse);
+
+        }
+
+        [TestMethod]
+        public async Task Get_ProductOpiton_ById_RETURN_Not_Found_When_DataRepo_Have_No_ProductsOptions()
+        {
+            var mockProductRepository = new Mock<IProductRepository>();
+            mockProductRepository
+                .Setup(repo => repo.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .Throws(new ProductOptionNotFoundException());
+
+            var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
+            var statusCode = result1.Result;
+            Assert.IsInstanceOfType(statusCode, typeof(NotFoundObjectResult));
+        }
+
+        [TestMethod]
+        public async Task GetAll_ProductOptions_RETURN_ProductsOptions_OK_WHERE_There_Are_ProductOptions()
+        {
+            List<ProductOption> resultWithOneRecord = new List<ProductOption>
+            {
+                new ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid}
+            };
+
+            Models.ProductOptions productsOptionsResponse = new API.Models.ProductOptions(new List<API.Models.ProductOption>()
+            {
+                new API.Models.ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid}
+            });
+
+            var mockProductRepository = new Mock<IProductRepository>();
+            mockProductRepository
+                .Setup(repo => repo.GetOptions(It.IsAny<Guid>()))
+                .Returns(Task.FromResult(resultWithOneRecord.AsEnumerable()));
+
+            var statusCode = (await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptions(NewGuid)).Result;
+            Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
+
+            var result = statusCode as OkObjectResult;
+            var response = result.Value;
+            response.Should().BeEquivalentTo(productsOptionsResponse);
 
 
         }

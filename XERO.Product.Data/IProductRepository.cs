@@ -16,7 +16,7 @@ namespace Xero.Product.Data
         Task<ProductData> GetProduct(Guid id);
         Task<IEnumerable<ProductOption>> GetOptions(Guid productId);
 
-        Task<IEnumerable<ProductOption>> GetOptionById(Guid productId, Guid OptionId);
+        Task<ProductOption> GetOptionById(Guid productId, Guid OptionId);
         Task<ProductData> UpdateProduct(Guid id, ProductData product);
 
         Task<ProductOption> UpdateProductOption(Guid id, Guid productOption, ProductOption product);
