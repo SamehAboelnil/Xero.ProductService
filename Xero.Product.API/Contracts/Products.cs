@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Xero.Product.API.Models
+namespace Xero.Product.API.Contracts
 {
     public class Products
     {

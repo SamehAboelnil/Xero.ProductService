@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Xero.Product.API.Validation;
 using Xero.Product.Data;
 
 namespace Xero.Product.API
@@ -29,6 +30,7 @@ namespace Xero.Product.API
             options.UseSqlServer(Configuration.GetConnectionString("xeroproductsserviceContext")));
 
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ModelValidationAttribute>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,7 +12,7 @@ namespace Xero.Product.Data.UnitTests
         public async Task AddProduct_OneProduct_ProductAddedToDB()
         {
             DbContextOptions<ProductContext> options = new DbContextOptionsBuilder<ProductContext>()
-               .UseInMemoryDatabase(databaseName: "Products_DB")
+               .UseInMemoryDatabase(databaseName: "Products_DB_Add")
                .Options;
             ProductData newProduct;
             using (ProductContext context = new ProductContext(options))

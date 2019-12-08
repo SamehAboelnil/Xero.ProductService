@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xero.Product.API.Validation;
 using Xero.Product.Data;
 
 namespace Xero.Product.API.Controllers
@@ -26,21 +27,21 @@ namespace Xero.Product.API.Controllers
 
         // GET api/products
         [HttpGet]
-        public async Task<ActionResult<Models.Products>> GetProducts([FromQuery] string name)
+        public async Task<ActionResult<Contracts.Products>> GetProducts([FromQuery] string name)
         {
             IEnumerable<Domain.Domain.ProductData> result = await productService.GetAllProducts(name);
-            List<Models.ProductData> products = _mapper.Map<List<Domain.Domain.ProductData>, List<Models.ProductData>>(result.ToList());
-            return Ok(new Models.Products(products));
+            List<Contracts.ProductData> products = _mapper.Map<List<Domain.Domain.ProductData>, List<Contracts.ProductData>>(result.ToList());
+            return Ok(new Contracts.Products(products));
         }
 
         // GET api/product/8f2e9176-35ee-4f0a-ae55-83023d2db1a3
         [HttpGet("{id}")]
-        public async Task<ActionResult<Models.ProductData>> GetProductById(Guid id)
+        public async Task<ActionResult<Contracts.ProductData>> GetProductById(Guid id)
         {
             try
             {
                 Domain.Domain.ProductData product = await productService.GetProduct(id);
-                Models.ProductData result = _mapper.Map<Models.ProductData>(product);
+                Contracts.ProductData result = _mapper.Map<Contracts.ProductData>(product);
                 return Ok(result);
             }
             catch (ProductNotFoundException)
@@ -56,13 +57,14 @@ namespace Xero.Product.API.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Models.ProductData>> PostProduct(Models.ProductData product)
+        [ModelValidation]
+        public async Task<ActionResult<Contracts.ProductData>> PostProduct(Contracts.ProductData product)
         {
             try
             {
                 Domain.Domain.ProductData newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
                 Domain.Domain.ProductData result = await productService.AddProduct(newProduct);
-                Models.ProductData addedProduct = _mapper.Map<Models.ProductData>(result);
+                Contracts.ProductData addedProduct = _mapper.Map<Contracts.ProductData>(result);
                 return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
             }
             catch (ProductDuplicateException)
@@ -76,7 +78,8 @@ namespace Xero.Product.API.Controllers
         }
 
         [HttpPost("{id}/options")]
-        public async Task<ActionResult<Domain.Domain.ProductOption>> PostProductOption(Guid id, Models.ProductOption productOption)
+        [ModelValidation]
+        public async Task<ActionResult<Domain.Domain.ProductOption>> PostProductOption(Guid id, Contracts.ProductOption productOption)
         {
             try
             {
@@ -85,7 +88,7 @@ namespace Xero.Product.API.Controllers
 
                 Domain.Domain.ProductOption result = await productService.AddProductOption(id, newProductOption);
 
-                Models.ProductOption addedProductOption = _mapper.Map<Models.ProductOption>(result);
+                Contracts.ProductOption addedProductOption = _mapper.Map<Contracts.ProductOption>(result);
                 return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
             }
             catch (ProductNotFoundException)
@@ -104,7 +107,8 @@ namespace Xero.Product.API.Controllers
 
         // PUT api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] Models.ProductData product)
+        [ModelValidation]
+        public async Task<IActionResult> Put(Guid id, [FromBody] Contracts.ProductData product)
         {
             try
             {
@@ -125,7 +129,8 @@ namespace Xero.Product.API.Controllers
 
         // PUT api/Products/5/Options/1
         [HttpPut("{id}/options/{optionId}")]
-        public async Task<IActionResult> Put(Guid id, Guid optionId, [FromBody] Models.ProductOption productOption)
+        [ModelValidation]
+        public async Task<IActionResult> Put(Guid id, Guid optionId, [FromBody] Contracts.ProductOption productOption)
         {
             try
             {
@@ -143,7 +148,9 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
+#pragma warning disable CS0168 // The variable 'e' is declared but never used
             catch(Exception e)
+#pragma warning restore CS0168 // The variable 'e' is declared but never used
             {
                 return StatusCode(500);
             }
@@ -151,12 +158,12 @@ namespace Xero.Product.API.Controllers
 
         // DELETE api/Products/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Models.ProductData>> Delete(Guid id)
+        public async Task<ActionResult<Contracts.ProductData>> Delete(Guid id)
         {
             try
             {
                 Domain.Domain.ProductData result = await productService.DeleteProduct(id);
-                Models.ProductData deletedProduct = _mapper.Map<Models.ProductData>(result);
+                Contracts.ProductData deletedProduct = _mapper.Map<Contracts.ProductData>(result);
                 return Ok(deletedProduct);
             }
             catch (ProductNotFoundException)
@@ -171,12 +178,13 @@ namespace Xero.Product.API.Controllers
 
         // DELETE api/Products/5/options/1
         [HttpDelete("{id}/options/{optionId}")]
-        public async Task<ActionResult<Models.ProductOption>> DeleteOption(Guid id, Guid optionId)
+        [ModelValidation]
+        public async Task<ActionResult<Contracts.ProductOption>> DeleteOption(Guid id, Guid optionId)
         {
             try
             {
                 Domain.Domain.ProductOption productOption = await productService.DeleteProductOption(id, optionId);
-                Models.ProductOption deletedProductOption = _mapper.Map<Models.ProductOption>(productOption);
+                Contracts.ProductOption deletedProductOption = _mapper.Map<Contracts.ProductOption>(productOption);
                 return Ok(deletedProductOption);
             }
             catch (ProductNotFoundException)
@@ -196,7 +204,7 @@ namespace Xero.Product.API.Controllers
 
         // GET api/Products/2/options
         [HttpGet("{id}/options")]
-        public async Task<ActionResult<Models.ProductOptions>> GetOptions(Guid id)
+        public async Task<ActionResult<Contracts.ProductOptions>> GetOptions(Guid id)
         {
             try
             {
@@ -206,8 +214,8 @@ namespace Xero.Product.API.Controllers
                     return NotFound($"No options found with {id} value");
                 }
 
-                List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Models.ProductOption>>(result.ToList());
-                return Ok(new Models.ProductOptions(productOptions));
+                List<Contracts.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Contracts.ProductOption>>(result.ToList());
+                return Ok(new Contracts.ProductOptions(productOptions));
             }
             catch (ProductNotFoundException)
             {
@@ -221,12 +229,12 @@ namespace Xero.Product.API.Controllers
 
         // GET api/Products/2/options/3
         [HttpGet("{id}/options/{optionId}")]
-        public async Task<ActionResult<IEnumerable<Models.ProductOption>>> GetOptionById(Guid id, Guid optionId)
+        public async Task<ActionResult<IEnumerable<Contracts.ProductOption>>> GetOptionById(Guid id, Guid optionId)
         {
             try
             {
                 Domain.Domain.ProductOption result = await productService.GetOptionById(id, optionId);
-                Models.ProductOption productOption = _mapper.Map<Models.ProductOption>(result);
+                Contracts.ProductOption productOption = _mapper.Map<Contracts.ProductOption>(result);
                 return Ok(productOption);
             }
             catch (ProductNotFoundException)

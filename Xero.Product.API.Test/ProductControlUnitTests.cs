@@ -45,9 +45,9 @@ namespace Xero.Product.API.UnitTests
                 new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 }
             };
 
-            Models.Products productsResponse = new Models.Products(new List<Models.ProductData>()
+            Contracts.Products productsResponse = new Contracts.Products(new List<Contracts.ProductData>()
             {
-                new Models.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123 }
+                new Contracts.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123 }
             });
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
@@ -67,7 +67,7 @@ namespace Xero.Product.API.UnitTests
         {
             List<ProductData> resultWithOneRecord = new List<ProductData>{};
 
-            Models.Products productsResponse = new Models.Products(new List<Models.ProductData>(){});
+            Contracts.Products productsResponse = new Contracts.Products(new List<Contracts.ProductData>(){});
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
@@ -90,7 +90,7 @@ namespace Xero.Product.API.UnitTests
                 .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
                 .Returns(Task.FromResult(false));
 
-            ActionResult<Models.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
+            ActionResult<Contracts.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(NotFoundObjectResult));
         }
@@ -98,7 +98,7 @@ namespace Xero.Product.API.UnitTests
         [TestMethod]
         public async Task GetProductByID_IdExist_ReturnProduct()
         {
-            Models.ProductData productResponse = new API.Models.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
+            Contracts.ProductData productResponse = new API.Contracts.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
@@ -109,7 +109,7 @@ namespace Xero.Product.API.UnitTests
                .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
                .Returns(Task.FromResult(true));
 
-            ActionResult<Models.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
+            ActionResult<Contracts.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
 
@@ -121,7 +121,7 @@ namespace Xero.Product.API.UnitTests
         [TestMethod]
         public async Task GetOptionById_IdExist_ReturnProductOption()
         {
-            Models.ProductOption productOptionResponse = new Models.ProductOption { Name = "ProductOption", Description = " Any desciption ", Id = NewGuid };
+            Contracts.ProductOption productOptionResponse = new Contracts.ProductOption { Name = "ProductOption", Description = " Any desciption ", Id = NewGuid };
             ProductOption resultOneProduct = new ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid };
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
@@ -131,7 +131,7 @@ namespace Xero.Product.API.UnitTests
             mockProductRepository
                .Setup(repo => repo.IsProductOptionExist(It.IsAny<Guid>(), It.IsAny<Guid>()))
                .Returns(Task.FromResult(true));
-            ActionResult<IEnumerable<Models.ProductOption>> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
+            ActionResult<IEnumerable<Contracts.ProductOption>> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
 
@@ -149,7 +149,7 @@ namespace Xero.Product.API.UnitTests
                 .Setup(repo => repo.IsProductOptionExist(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .Returns(Task.FromResult(false));
 
-            ActionResult<IEnumerable<Models.ProductOption>> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
+            ActionResult<IEnumerable<Contracts.ProductOption>> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(NotFoundObjectResult));
         }
@@ -162,9 +162,9 @@ namespace Xero.Product.API.UnitTests
                 new ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid}
             };
 
-            Models.ProductOptions productsOptionsResponse = new API.Models.ProductOptions(new List<API.Models.ProductOption>()
+            Contracts.ProductOptions productsOptionsResponse = new API.Contracts.ProductOptions(new List<API.Contracts.ProductOption>()
             {
-                new Models.ProductOption { Name = "ProductOption", Description = " Any desciption ", Id = NewGuid}
+                new Contracts.ProductOption { Name = "ProductOption", Description = " Any desciption ", Id = NewGuid}
             });
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();

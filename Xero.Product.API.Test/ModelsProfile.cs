@@ -7,8 +7,8 @@ namespace Xero.Product.API.UnitTests
     {
         public ModelsProfile()
         {
-            CreateMap<Domain.Domain.ProductData, API.Models.ProductData>().ReverseMap();
-            CreateMap<Domain.Domain.ProductOption, Models.ProductOption>().ReverseMap();
+            CreateMap<Domain.Domain.ProductData, API.Contracts.ProductData>().ReverseMap();
+            CreateMap<Domain.Domain.ProductOption, Contracts.ProductOption>().ReverseMap();
         }
     }
 }
