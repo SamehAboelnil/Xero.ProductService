@@ -19,6 +19,9 @@ namespace Xero.Product.Data
         Task<ProductOption> GetOptionById(Guid productId, Guid OptionId);
         Task<ProductData> UpdateProduct(Guid id, ProductData product);
 
+        Task<bool> IsProductExist(Guid OptionId);
+        Task<bool> IsProductOptionExist(Guid ProductId, Guid OptionId);
+
         Task<ProductOption> UpdateProductOption(Guid id, Guid productOption, ProductOption product);
     }
 }

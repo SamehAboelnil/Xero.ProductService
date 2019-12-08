@@ -68,8 +68,8 @@ namespace Xero.Product.API.UnitTests
         {
             var mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
-                .Setup(repo => repo.GetProduct(It.IsAny<Guid>()))
-                .Throws(new ProductNotFoundException());
+                .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
+                .Returns(Task.FromResult(false));
 
             var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).Get(NewGuid);
             var statusCode = result1.Result;
@@ -83,11 +83,14 @@ namespace Xero.Product.API.UnitTests
             Models.ProductData productResponse = new API.Models.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
 
-
             var mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
                 .Setup(repo => repo.GetProduct(It.IsAny<Guid>()))
                 .Returns(Task.FromResult(resultOneProduct));
+            mockProductRepository
+               .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
+               .Returns(Task.FromResult(true));
+
 
             var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).Get(NewGuid);
             var statusCode = result1.Result;
@@ -109,7 +112,9 @@ namespace Xero.Product.API.UnitTests
             mockProductRepository
                 .Setup(repo => repo.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .Returns(Task.FromResult(resultOneProduct));
-
+            mockProductRepository
+               .Setup(repo => repo.IsProductOptionExist(It.IsAny<Guid>(), It.IsAny<Guid>()))
+               .Returns(Task.FromResult(true));
             var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
             var statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
@@ -125,8 +130,8 @@ namespace Xero.Product.API.UnitTests
         {
             var mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
-                .Setup(repo => repo.GetOptionById(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .Throws(new ProductOptionNotFoundException());
+                .Setup(repo => repo.IsProductOptionExist(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .Returns(Task.FromResult(false));
 
             var result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetOptionById(NewGuid, NewGuid);
             var statusCode = result1.Result;

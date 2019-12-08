@@ -37,7 +37,7 @@ namespace Xero.Product.Domain
             return productOptions.Select(x => Mapping.Mapper.Map<Domain.ProductOption>(x));
         }
 
-        public async Task<Product.Domain.Domain.ProductOption> GetOptionById(Guid productId, Guid optionId)
+        public async Task<Domain.ProductOption> GetOptionById(Guid productId, Guid optionId)
         {
             if (!await ProductOptionExists(productId, optionId))
             {
@@ -108,16 +108,12 @@ namespace Xero.Product.Domain
 
         private async Task<bool> ProductExists(Guid id)
         {
-            if (await productRepository.GetProduct(id) == null)
-                return false;
-            return true;
+            return await productRepository.IsProductExist(id) == true;//TODO new function in repo that check, don't return object
         }
 
         private async Task<bool> ProductOptionExists(Guid productId, Guid optionId)
         {
-            if (await productRepository.GetOptionById(productId, optionId) == null)
-                return false;
-            return true;
+            return await productRepository.IsProductOptionExist(productId, optionId);
         }
     }
 }

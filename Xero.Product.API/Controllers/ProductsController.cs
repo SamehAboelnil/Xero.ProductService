@@ -48,7 +48,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500, "Server error");
             }

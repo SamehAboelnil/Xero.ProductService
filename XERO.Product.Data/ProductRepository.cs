@@ -25,6 +25,16 @@ namespace Xero.Product.Data
             return await context.Product.FindAsync(productId);
         }
 
+        public async Task<bool> IsProductExist(Guid productId)
+        {
+            return await context.Product.AnyAsync(product => product.Id == productId);
+        }
+
+        public async Task<bool> IsProductOptionExist(Guid productId, Guid optionId)
+        {
+            return await IsProductExist(productId) && await context.ProductOption.AnyAsync(option => option.Id == optionId);
+        }
+
         public async Task<IEnumerable<ProductOption>> GetOptions(Guid productId)
         {
             List<ProductOption> result = await context.ProductOption.ToListAsync();
