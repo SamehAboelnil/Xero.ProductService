@@ -48,7 +48,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Server error");
             }
@@ -60,15 +60,19 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
+                Domain.Domain.ProductData newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
 
                 Domain.Domain.ProductData result = await productService.AddProduct(newProduct);
-                var addedProduct = _mapper.Map<Models.ProductData>(result);
+                Models.ProductData addedProduct = _mapper.Map<Models.ProductData>(result);
                 return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
             }
-            catch
+            catch (ProductDuplicateException)
             {
-                return StatusCode(500, "Server error");
+                return new ConflictResult();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
         }
 
@@ -77,15 +81,19 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                Domain.Domain.ProductOption newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
                 Domain.Domain.ProductOption result = await productService.AddProductOption(id, newProductOption);
 
-                var addedProductOption = _mapper.Map<Models.ProductOption>(result);
+                Models.ProductOption addedProductOption = _mapper.Map<Models.ProductOption>(result);
                 return CreatedAtAction("PostProductOption", new { id = addedProductOption.Id }, addedProductOption);
             }
             catch (ProductNotFoundException)
             {
                 return NotFound($"No product found with {id} value");
+            }
+            catch (ProductOptionDuplicateException)
+            {
+                return new ConflictResult();
             }
             catch (Exception)
             {
@@ -99,7 +107,7 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var updatedProduct = _mapper.Map<Domain.Domain.ProductData>(product);
+                Domain.Domain.ProductData updatedProduct = _mapper.Map<Domain.Domain.ProductData>(product);
                 Domain.Domain.ProductData result = await productService.UpdateProduct(id, updatedProduct);
 
                 return NoContent();
@@ -120,7 +128,7 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                var newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                Domain.Domain.ProductOption newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
                 Domain.Domain.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
                 return NoContent();
             }
@@ -136,7 +144,6 @@ namespace Xero.Product.API.Controllers
             {
                 return StatusCode(500, error);
             }
-
         }
 
         // DELETE api/Products/5
@@ -146,10 +153,10 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductData result = await productService.DeleteProduct(id);
-                var deletedProduct = _mapper.Map<Models.ProductData>(result);
+                Models.ProductData deletedProduct = _mapper.Map<Models.ProductData>(result);
                 return Ok(deletedProduct);
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 return NotFound($"No product found with {id} value");
             }
@@ -166,10 +173,10 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductOption result = await productService.DeleteProductOption(id, optionId);
-                var deletedProductOption = _mapper.Map<Models.ProductOption>(result);
+                Models.ProductOption deletedProductOption = _mapper.Map<Models.ProductOption>(result);
                 return Ok(deletedProductOption);
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 return NotFound($"No product found with {id} value");
             }
@@ -192,7 +199,10 @@ namespace Xero.Product.API.Controllers
             {
                 IEnumerable<Domain.Domain.ProductOption> result = await productService.GetOptions(id);
                 if (result == null)
+                {
                     return NotFound($"No options found with {id} value");
+                }
+
                 List<Models.ProductOption> productOptions = _mapper.Map<List<Domain.Domain.ProductOption>, List<Models.ProductOption>>(result.ToList());
                 return Ok(new Models.ProductOptions(productOptions));
             }
@@ -213,7 +223,7 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductOption result = await productService.GetOptionById(id, optionId);
-                Models.ProductOption productOption = _mapper.Map<Models.ProductOption>(result);  
+                Models.ProductOption productOption = _mapper.Map<Models.ProductOption>(result);
                 return Ok(productOption);
             }
             catch (ProductNotFoundException)

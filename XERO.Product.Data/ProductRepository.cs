@@ -15,13 +15,13 @@ namespace Xero.Product.Data
         }
 
         public async Task<IEnumerable<ProductData>> GetAllProducts(string name)
-        {   
+        {
             return string.IsNullOrEmpty(name) ? await context.Product.ToListAsync() : await context.Product.Where(p => p.Name == name).ToListAsync();
         }
 
         public async Task<ProductData> GetProduct(Guid productId)
         {
-            
+
             return await context.Product.FindAsync(productId);
         }
 
@@ -43,7 +43,7 @@ namespace Xero.Product.Data
 
         public async Task<ProductOption> AddProductOption(Guid productId, ProductOption productOption)
         {
-            var product = await context.Product.FindAsync(productId);
+            ProductData product = await context.Product.FindAsync(productId);
             product.AddOption(productOption);
             await context.SaveChangesAsync();
             return productOption;
@@ -57,16 +57,16 @@ namespace Xero.Product.Data
             return product;
         }
 
-        public async Task<ProductData> UpdateProduct(Guid productId, ProductData product) // should return product?
+        public async Task<ProductData> UpdateProduct(Guid productId, ProductData product)
         {
             context.Entry(product).State = EntityState.Modified;
             try
             {
                 await context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) //TODO better exception handling
+            catch (DbUpdateConcurrencyException)
             {
-                throw; 
+                throw;
             }
 
             return product;
@@ -92,11 +92,11 @@ namespace Xero.Product.Data
 
             try
             {
-                var product = await context.Product.FindAsync(id);
-                var option = product.Options.Where(x => x.Id == optionId).FirstOrDefault();
+                ProductData product = await context.Product.FindAsync(id);
+                ProductOption option = product.Options.Where(x => x.Id == optionId).FirstOrDefault();
                 option = productOption;
 
-                
+
                 await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -108,7 +108,7 @@ namespace Xero.Product.Data
         }
 
         public async Task<ProductOption> DeleteProductOption(Guid productId, Guid productOptionId)
-        {            
+        {
             ProductOption productOption = await context.ProductOption.Where(p => p.ProductId == productId && p.Id == productOptionId).FirstOrDefaultAsync();
             context.ProductOption.Remove(productOption);
             await context.SaveChangesAsync();

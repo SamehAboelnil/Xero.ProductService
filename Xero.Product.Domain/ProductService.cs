@@ -18,9 +18,7 @@ namespace Xero.Product.Domain
         {
             IEnumerable<Data.ProductData> products = await productRepository.GetAllProducts(name);
             return products.Select(x => Mapping.Mapper.Map<Domain.ProductData>(x)).ToList();
-
         }
-
         public async Task<Domain.ProductData> GetProduct(Guid id)
         {
             if (!await ProductExists(id))
@@ -43,12 +41,16 @@ namespace Xero.Product.Domain
             {
                 throw new ProductOptionNotFoundException();
             }
-            var productOptions = await productRepository.GetOptionById(productId, optionId);
+            ProductOption productOptions = await productRepository.GetOptionById(productId, optionId);
             return Mapping.Mapper.Map<Domain.ProductOption>(productOptions);
         }
 
         public async Task<Domain.ProductData> AddProduct(Domain.ProductData product)
         {
+            if (await ProductExists(product.Id))
+            {
+                throw new ProductDuplicateException($"Product Id{product.Id} is duplicate");
+            }
             ProductData addedProduct = await productRepository.AddProduct(Mapping.Mapper.Map<Data.ProductData>(product));
             return Mapping.Mapper.Map<Domain.ProductData>(addedProduct);
         }
@@ -59,7 +61,10 @@ namespace Xero.Product.Domain
             {
                 throw new ProductNotFoundException($"Product Id{productId} not found");
             }
-            // Business Logic here
+            if (await ProductOptionExists(productId, productOption.Id))
+            {
+                throw new ProductOptionDuplicateException($"ProductOption {productOption.Id} already exist");
+            }
             ProductOption AddedProductOption = await productRepository.AddProductOption(productId, Mapping.Mapper.Map<ProductOption>(productOption));
             return Mapping.Mapper.Map<Domain.ProductOption>(AddedProductOption);
         }
@@ -105,10 +110,9 @@ namespace Xero.Product.Domain
             return Mapping.Mapper.Map<Domain.ProductOption>(deletedProductOption);
         }
 
-
         private async Task<bool> ProductExists(Guid id)
         {
-            return await productRepository.IsProductExist(id) == true;//TODO new function in repo that check, don't return object
+            return await productRepository.IsProductExist(id) == true;
         }
 
         private async Task<bool> ProductOptionExists(Guid productId, Guid optionId)

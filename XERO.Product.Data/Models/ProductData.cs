@@ -20,7 +20,10 @@ namespace Xero.Product.Data
         public void AddOption(ProductOption option)
         {
             if (Options == null)
+            {
                 Options = new List<ProductOption>();
+            }
+
             Options.Add(option);
 
 
