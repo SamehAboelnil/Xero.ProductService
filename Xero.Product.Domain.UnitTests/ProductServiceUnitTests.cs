@@ -15,11 +15,11 @@ namespace Xero.Product.Domain.UnitTests
         private Guid newGuid = new Guid("d6c21ad4-8e98-40ed-aa13-b8807051dee6");
         public Guid NewGuid { get => newGuid; set => newGuid = value; }
         [TestMethod]
-        public async Task Get_Return_Products_WHEN_DataRepo_Have_Products()
+        public async Task GetAllProducts_ReturnProducts()
         {
-            List<Data.ProductData> resultWithOneRecord = new List<Data.ProductData>
+            List<ProductData> resultWithOneRecord = new List<ProductData>
             {
-                new Data.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 }
+                new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 }
             };
 
             List<Domain.ProductData> productsResponse = new List<Domain.ProductData>
@@ -39,7 +39,7 @@ namespace Xero.Product.Domain.UnitTests
         }
 
         [TestMethod]
-        public async Task GetProduct_Return_Product_WHEN_Product_is_Exist()
+        public async Task GetProduct_ValidProductId_ReturnProduct()
         {
             ProductData resultWithOneRecord = new Data.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
 
@@ -63,9 +63,9 @@ namespace Xero.Product.Domain.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ProductOptionNotFoundException))]
-        public async Task GetProduct_Throw_Exception_WHEN_Product_is_not_Exist()
+        public async Task GetOptionById_OptionNotExist_ThrowProductOptionNotFoundException()
         {
-            ProductData resultWithOneRecord = new Data.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
+            ProductData resultWithOneRecord = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
 
             Domain.ProductData productsResponse = new Domain.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123 };
 
@@ -76,9 +76,8 @@ namespace Xero.Product.Domain.UnitTests
             ProductService productService = new ProductService(mockProductRepository.Object);
             await productService.GetOptionById(newGuid, newGuid);
         }
-
         [TestMethod]
-        public async Task GetProductOption_Return_ProductOption_WHEN_ProductOption_is_Exist()
+        public async Task GetOptionById_ReturnOption()
         {
             ProductOption resultWithOneRecord = new Data.ProductOption { ProductId = NewGuid, Name = "ProductOption", Description = " Any desciption ", Id = NewGuid };
 

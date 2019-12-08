@@ -26,9 +26,8 @@ namespace Xero.Product.API.Controllers
 
         // GET api/products
         [HttpGet]
-        public async Task<ActionResult<Models.Products>> Get([FromQuery] string name)
+        public async Task<ActionResult<Models.Products>> GetProducts([FromQuery] string name)
         {
-
             IEnumerable<Domain.Domain.ProductData> result = await productService.GetAllProducts(name);
             List<Models.ProductData> products = _mapper.Map<List<Domain.Domain.ProductData>, List<Models.ProductData>>(result.ToList());
             return Ok(new Models.Products(products));
@@ -36,7 +35,7 @@ namespace Xero.Product.API.Controllers
 
         // GET api/product/8f2e9176-35ee-4f0a-ae55-83023d2db1a3
         [HttpGet("{id}")]
-        public async Task<ActionResult<Models.ProductData>> Get(Guid id)
+        public async Task<ActionResult<Models.ProductData>> GetProductById(Guid id)
         {
             try
             {
@@ -48,7 +47,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500, "Server error");
             }
@@ -61,7 +60,6 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductData newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
-
                 Domain.Domain.ProductData result = await productService.AddProduct(newProduct);
                 Models.ProductData addedProduct = _mapper.Map<Models.ProductData>(result);
                 return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
@@ -70,7 +68,7 @@ namespace Xero.Product.API.Controllers
             {
                 return new ConflictResult();
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -95,7 +93,7 @@ namespace Xero.Product.API.Controllers
             {
                 return new ConflictResult();
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -116,7 +114,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -140,9 +138,9 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch (Exception error)
+            catch(Exception e)
             {
-                return StatusCode(500, error);
+                return StatusCode(500);
             }
         }
 
@@ -160,7 +158,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -184,7 +182,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -210,7 +208,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }
@@ -234,7 +232,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch (Exception)
+            catch
             {
                 return StatusCode(500);
             }

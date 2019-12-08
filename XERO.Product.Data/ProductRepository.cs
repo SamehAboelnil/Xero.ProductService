@@ -89,7 +89,6 @@ namespace Xero.Product.Data
         public async Task<ProductOption> UpdateProductOption(Guid id, Guid optionId, ProductOption productOption)
         {
             context.Entry(productOption).State = EntityState.Modified;
-
             try
             {
                 ProductData product = await context.Product.FindAsync(id);

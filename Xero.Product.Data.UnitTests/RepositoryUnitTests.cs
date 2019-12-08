@@ -9,12 +9,11 @@ namespace Xero.Product.Data.UnitTests
     public class RepositoryUnitTests
     {
         [TestMethod]
-        public async Task AddProduct_Add_One_Product_and_Added_Product_Is_Not_Changed()
+        public async Task AddProduct_OneProduct_ProductAddedToDB()
         {
             DbContextOptions<ProductContext> options = new DbContextOptionsBuilder<ProductContext>()
                .UseInMemoryDatabase(databaseName: "Products_DB")
                .Options;
-
             ProductData newProduct;
             using (ProductContext context = new ProductContext(options))
             {

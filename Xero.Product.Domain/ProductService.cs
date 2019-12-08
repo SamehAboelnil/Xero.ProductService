@@ -114,7 +114,6 @@ namespace Xero.Product.Domain
         {
             return await productRepository.IsProductExist(id) == true;
         }
-
         private async Task<bool> ProductOptionExists(Guid productId, Guid optionId)
         {
             return await productRepository.IsProductOptionExist(productId, optionId);
