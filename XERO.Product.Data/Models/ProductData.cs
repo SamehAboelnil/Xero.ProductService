@@ -23,10 +23,7 @@ namespace Xero.Product.Data
             {
                 Options = new List<ProductOption>();
             }
-
             Options.Add(option);
-
-
         }
     }
 }

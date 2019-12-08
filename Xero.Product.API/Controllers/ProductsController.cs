@@ -80,6 +80,8 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductOption newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                newProductOption.ProductId = id;
+
                 Domain.Domain.ProductOption result = await productService.AddProductOption(id, newProductOption);
 
                 Models.ProductOption addedProductOption = _mapper.Map<Models.ProductOption>(result);
@@ -127,6 +129,8 @@ namespace Xero.Product.API.Controllers
             try
             {
                 Domain.Domain.ProductOption newProductOption = _mapper.Map<Domain.Domain.ProductOption>(productOption);
+                newProductOption.ProductId = id;
+
                 Domain.Domain.ProductOption result = await productService.UpdateProductOption(id, optionId, newProductOption);
                 return NoContent();
             }
@@ -170,8 +174,8 @@ namespace Xero.Product.API.Controllers
         {
             try
             {
-                Domain.Domain.ProductOption result = await productService.DeleteProductOption(id, optionId);
-                Models.ProductOption deletedProductOption = _mapper.Map<Models.ProductOption>(result);
+                Domain.Domain.ProductOption productOption = await productService.DeleteProductOption(id, optionId);
+                Models.ProductOption deletedProductOption = _mapper.Map<Models.ProductOption>(productOption);
                 return Ok(deletedProductOption);
             }
             catch (ProductNotFoundException)
@@ -182,7 +186,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch
+            catch(Exception e)
             {
                 return StatusCode(500);
             }

@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xero.Product.Domain.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xero.Product.Data.UnitTests", "Xero.Product.Data.UnitTests\Xero.Product.Data.UnitTests.csproj", "{587AD794-593B-4B80-BE2A-E5F108C9AF3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xero.Product.API.Test", "Xero.Product.API.Test\Xero.Product.API.Test.csproj", "{C6747BA4-EFC0-4957-9C23-058AA1B18E36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xero.Product.API.Test", "Xero.Product.API.Test\Xero.Product.API.Test.csproj", "{C6747BA4-EFC0-4957-9C23-058AA1B18E36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{19F08C02-599A-4734-B3E3-1950488DE3D8}"
+	ProjectSection(SolutionItems) = preProject
+		DB.sql = DB.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
