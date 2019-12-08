@@ -49,6 +49,7 @@ namespace Xero.Product.API.Controllers
             }
             catch
             {
+                // Future work, log errors
                 return StatusCode(500, "Server error");
             }
         }
@@ -186,7 +187,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch(Exception e)
+            catch
             {
                 return StatusCode(500);
             }
