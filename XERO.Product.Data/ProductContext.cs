@@ -8,15 +8,6 @@ namespace Xero.Product.Data
            : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<ProductData>()
-                .HasMany(b => b.Options)
-                .WithOne(p => p.Product)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-        }
-
         public DbSet<ProductData> Product { get; set; }
         public DbSet<ProductOption> ProductOption { get; set; }
     }

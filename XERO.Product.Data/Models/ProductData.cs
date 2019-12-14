@@ -14,7 +14,6 @@ namespace Xero.Product.Data
         public decimal Price { get; set; }
 
         public decimal DeliveryPrice { get; set; }
-        public int test { get; set; }
 
         public List<ProductOption> Options { get; set; }
 

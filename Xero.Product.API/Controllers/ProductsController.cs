@@ -48,7 +48,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch
+            catch (Exception ex)
             {
                 // Future work, log errors
                 return StatusCode(500, "Server error");
@@ -100,7 +100,7 @@ namespace Xero.Product.API.Controllers
             {
                 return new ConflictResult();
             }
-            catch
+            catch(Exception ex)
             {
                 return StatusCode(500);
             }
@@ -122,7 +122,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -171,7 +171,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -196,7 +196,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -222,7 +222,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product found with {id} value");
             }
-            catch
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -246,7 +246,7 @@ namespace Xero.Product.API.Controllers
             {
                 return NotFound($"No product option found with {optionId} value");
             }
-            catch
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }

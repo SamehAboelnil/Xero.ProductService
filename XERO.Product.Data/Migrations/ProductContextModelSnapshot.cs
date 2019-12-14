@@ -37,9 +37,6 @@ namespace Xero.Product.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("test")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Product");
@@ -57,23 +54,24 @@ namespace Xero.Product.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("ProductDataId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductDataId");
 
                     b.ToTable("ProductOption");
                 });
 
             modelBuilder.Entity("Xero.Product.Data.ProductOption", b =>
                 {
-                    b.HasOne("Xero.Product.Data.ProductData", "Product")
+                    b.HasOne("Xero.Product.Data.ProductData", null)
                         .WithMany("Options")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductDataId");
                 });
 #pragma warning restore 612, 618
         }

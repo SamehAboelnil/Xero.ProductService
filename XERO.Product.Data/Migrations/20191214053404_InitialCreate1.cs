@@ -12,7 +12,6 @@ namespace Xero.Product.Data.Migrations
                 nullable: false,
                 defaultValue: 0);
         }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
