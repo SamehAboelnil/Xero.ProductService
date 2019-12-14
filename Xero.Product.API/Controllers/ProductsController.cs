@@ -36,12 +36,12 @@ namespace Xero.Product.API.Controllers
 
         // GET api/product/8f2e9176-35ee-4f0a-ae55-83023d2db1a3
         [HttpGet("{id}")]
-        public async Task<ActionResult<Contracts.ProductData>> GetProductById(Guid id)
+        public async Task<ActionResult<Contracts.ProductDataDetailed>> GetProductById(Guid id)
         {
             try
             {
                 Domain.Domain.ProductData product = await productService.GetProduct(id);
-                Contracts.ProductData result = _mapper.Map<Contracts.ProductData>(product);
+                Contracts.ProductDataDetailed result = _mapper.Map<Contracts.ProductDataDetailed>(product);
                 return Ok(result);
             }
             catch (ProductNotFoundException)
@@ -56,22 +56,23 @@ namespace Xero.Product.API.Controllers
         }
 
         // POST: api/Products
+        // POST: api/Products
         [HttpPost]
         [ModelValidation]
-        public async Task<ActionResult<Contracts.ProductData>> PostProduct(Contracts.ProductData product)
+        public async Task<ActionResult<Contracts.ProductDataDetailed>> PostProduct(Contracts.ProductDataDetailed product)
         {
             try
             {
                 Domain.Domain.ProductData newProduct = _mapper.Map<Domain.Domain.ProductData>(product);
                 Domain.Domain.ProductData result = await productService.AddProduct(newProduct);
-                Contracts.ProductData addedProduct = _mapper.Map<Contracts.ProductData>(result);
+                Contracts.ProductDataDetailed addedProduct = _mapper.Map<Contracts.ProductDataDetailed>(result);
                 return CreatedAtAction("PostProduct", new { id = addedProduct.Id }, addedProduct);
             }
             catch (ProductDuplicateException)
             {
                 return new ConflictResult();
             }
-            catch
+            catch(Exception e)
             {
                 return StatusCode(500);
             }
@@ -108,7 +109,7 @@ namespace Xero.Product.API.Controllers
         // PUT api/Products/5
         [HttpPut("{id}")]
         [ModelValidation]
-        public async Task<IActionResult> Put(Guid id, [FromBody] Contracts.ProductData product)
+        public async Task<IActionResult> Put(Guid id, [FromBody] Contracts.ProductDataDetailed product)
         {
             try
             {
@@ -158,12 +159,12 @@ namespace Xero.Product.API.Controllers
 
         // DELETE api/Products/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Contracts.ProductData>> Delete(Guid id)
+        public async Task<ActionResult<Contracts.ProductDataDetailed>> Delete(Guid id)
         {
             try
             {
                 Domain.Domain.ProductData result = await productService.DeleteProduct(id);
-                Contracts.ProductData deletedProduct = _mapper.Map<Contracts.ProductData>(result);
+                Contracts.ProductDataDetailed deletedProduct = _mapper.Map<Contracts.ProductDataDetailed>(result);
                 return Ok(deletedProduct);
             }
             catch (ProductNotFoundException)
