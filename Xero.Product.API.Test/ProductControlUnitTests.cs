@@ -90,7 +90,7 @@ namespace Xero.Product.API.UnitTests
                 .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
                 .Returns(Task.FromResult(false));
 
-            ActionResult<Contracts.ProductDataDetailed> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
+            ActionResult<Contracts.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(NotFoundObjectResult));
         }
@@ -98,7 +98,7 @@ namespace Xero.Product.API.UnitTests
         [TestMethod]
         public async Task GetProductByID_IdExist_ReturnProduct()
         {
-            Contracts.ProductDataDetailed productResponse = new Contracts.ProductDataDetailed { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 , Options = new List<Contracts.ProductOption>() };
+            Contracts.ProductData productResponse = new Contracts.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
@@ -108,7 +108,7 @@ namespace Xero.Product.API.UnitTests
                .Setup(repo => repo.IsProductExist(It.IsAny<Guid>()))
                .Returns(Task.FromResult(true));
 
-            ActionResult<Contracts.ProductDataDetailed> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
+            ActionResult<Contracts.ProductData> result1 = await new Controllers.ProductsController(mockProductRepository.Object, Mapper).GetProductById(NewGuid);
             ActionResult statusCode = result1.Result;
             Assert.IsInstanceOfType(statusCode, typeof(OkObjectResult));
 
@@ -183,7 +183,7 @@ namespace Xero.Product.API.UnitTests
         public async Task Post_Product_RETURN_Created_WHERE_There_is_no_ID_Duplication()
         {
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
-            Contracts.ProductDataDetailed product = new Contracts.ProductDataDetailed { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123, Options = new List<Contracts.ProductOption>() { new Contracts.ProductOption() { Id = NewGuid, Description = " new option " , Name = " amazingOne"  } } };
+            Contracts.ProductData product = new Contracts.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123};
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
                 .Setup(repo => repo.AddProduct(It.IsAny<ProductData>()))
@@ -201,7 +201,7 @@ namespace Xero.Product.API.UnitTests
         public async Task Post_Product_THROW_Exception_WHERE_IDIsDuplicate()
         {
             ProductData resultOneProduct = new ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
-            Contracts.ProductDataDetailed product = new Contracts.ProductDataDetailed { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123, Options = new List<Contracts.ProductOption>() { new Contracts.ProductOption() { Id = NewGuid, Description = " new option ", Name = " amazingOne" } } };
+            Contracts.ProductData product = new Contracts.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123};
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository
                 .Setup(repo => repo.AddProduct(It.IsAny<ProductData>()))

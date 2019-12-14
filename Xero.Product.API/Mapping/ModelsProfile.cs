@@ -8,7 +8,6 @@ namespace Xero.Product.API.Controllers
         public ModelsProfile()
         {
             CreateMap<Domain.Domain.ProductOption, Contracts.ProductOption>().ReverseMap();
-            CreateMap<Domain.Domain.ProductData, Contracts.ProductDataDetailed>().ReverseMap();
             CreateMap<Domain.Domain.ProductData, Contracts.ProductData>().ReverseMap();
         }
     }
