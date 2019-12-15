@@ -24,7 +24,7 @@ namespace Xero.Product.Domain.UnitTests
 
             List<Domain.ProductData> productsResponse = new List<Domain.ProductData>
             {
-                new Domain.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123 }
+                new Domain.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123, Options = new List<Domain.ProductOption>() }
             };
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
@@ -41,9 +41,9 @@ namespace Xero.Product.Domain.UnitTests
         [TestMethod]
         public async Task GetProduct_ValidProductId_ReturnProduct()
         {
-            ProductData resultWithOneRecord = new Data.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123 };
+            ProductData resultWithOneRecord = new Data.ProductData { DeliveryPrice = 2, Description = "Test", Id = NewGuid, Name = " TestName", Price = 123, Options = new List<ProductOption>() };
 
-            Domain.ProductData productsResponse = new Domain.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123 };
+            Domain.ProductData productsResponse = new Domain.ProductData { DeliveryPrice = 2, Description = "Test", Id = newGuid, Name = " TestName", Price = 123, Options = new List<Domain.ProductOption>() };
 
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             mockProductRepository

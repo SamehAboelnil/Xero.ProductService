@@ -21,8 +21,8 @@ namespace Xero.Product.Data
 
         public async Task<ProductData> GetProduct(Guid productId)
         {
-
-            return await context.Product.FindAsync(productId);
+            var product =  await context.Product.FindAsync(productId);
+            return product;
         }
 
         public async Task<bool> IsProductExist(Guid productId)
@@ -43,8 +43,9 @@ namespace Xero.Product.Data
 
         public async Task<ProductOption> AddProductOption(Guid productId, ProductOption productOption)
         {
-            ProductData product = await context.Product.FindAsync(productId);
-            product.AddOption(productOption);
+            if (productOption == null)
+                throw new NullReferenceException("Product option can't be null");
+            context.ProductOption.Add(productOption);
             await context.SaveChangesAsync();
             return productOption;
         }
@@ -53,7 +54,6 @@ namespace Xero.Product.Data
         {
             context.Product.Add(product);
             await context.SaveChangesAsync();
-
             return product;
         }
 
@@ -91,8 +91,7 @@ namespace Xero.Product.Data
             context.Entry(productOption).State = EntityState.Modified;
             try
             {
-                ProductData product = await context.Product.FindAsync(id);
-                ProductOption option = product.Options.Where(x => x.Id == optionId).FirstOrDefault();
+                ProductOption option = context.ProductOption.Where(x => x.Id == optionId).FirstOrDefault();
                 option = productOption;
                 await context.SaveChangesAsync();
             }

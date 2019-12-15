@@ -15,6 +15,6 @@ namespace Xero.Product.Domain.Domain
 
         public decimal DeliveryPrice { get; set; }
 
-        public List<ProductOption> Options { get; }
+        public List<ProductOption> Options { get; set; }
     }
 }
