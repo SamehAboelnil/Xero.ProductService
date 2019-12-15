@@ -22,8 +22,6 @@ namespace Xero.Product.Data
         public async Task<ProductData> GetProduct(Guid productId)
         {
             var product =  await context.Product.FindAsync(productId);
-            var options = await context.ProductOption.Where(option => option.ProductId == productId).ToListAsync();
-            product.Options = options;
             return product;
         }
 
