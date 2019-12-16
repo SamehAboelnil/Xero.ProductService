@@ -1,0 +1,226 @@
+{
+	"id": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+	"name": "XERO",
+	"description": "",
+	"order": [
+		"4f73d759-373c-3ad6-d2e1-e37f384a93d8",
+		"27a29b66-32cc-b9df-6ff4-38a12ba3fa88",
+		"7f0c3f6b-8fae-5cdd-6ce2-916ea6f7146a",
+		"8fd1411a-d190-48e7-e3b4-fcf0fc222f5e",
+		"ed179a2e-981e-a3f5-0732-daf2f75575fd",
+		"744e902f-e439-96ff-d348-d0f0ae501113",
+		"2b3629ca-40d5-6af4-a23a-79bb8588b1ac"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1574586786717,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "27a29b66-32cc-b9df-6ff4-38a12ba3fa88",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576322610637,
+			"name": "https://localhost:44381/api/products",
+			"description": "",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"responses": [],
+			"rawModeData": "{\r\n\"id\" : \"8f5e9176-35ff-4f0a-ae55-83023d2fb5a7\",\r\n\"name\": \"Sameh Phone\",\r\n\"description\": \"Just new Sameh Phone 4\",\r\n\"price\": 103.99,\r\n\"deliveryPrice\": 12.99\r\n}"
+		},
+		{
+			"id": "2b3629ca-40d5-6af4-a23a-79bb8588b1ac",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"data": [],
+			"dataMode": "raw",
+			"name": "https://localhost:44381/api/products",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1576322209050,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\r\n\"id\" : \"8f5e9176-35ff-4f0a-ae55-83023d2fb5a7\",\r\n\"name\": \"Sameh Phone\",\r\n\"description\": \"Just new Sameh Phone 3\",\r\n\"price\": 103.99,\r\n\"deliveryPrice\": 12.99,\r\n\"productOptions\" : [\r\n\t {\r\n            \"id\": \"945c99d7-bc51-4231-bd67-b0ffcfe53c2b\",\r\n            \"name\": \"PS4\",\r\n            \"description\": \"Console platform\"\r\n        }\r\n\t]\r\n}"
+		},
+		{
+			"id": "4f73d759-373c-3ad6-d2e1-e37f384a93d8",
+			"headers": "",
+			"headerData": [],
+			"url": "",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"data": null,
+			"dataMode": "params",
+			"name": "AddProduct",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1574586787862,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "744e902f-e439-96ff-d348-d0f0ae501113",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "DELETE",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"data": [],
+			"dataMode": "raw",
+			"name": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1576322142008,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": " {\n            \"id\": \"145eab89-651b-453d-8485-c1b4409cac91\",\n            \"name\": \"PS4\",\n            \"description\": \"Console platform\"\n        }"
+		},
+		{
+			"id": "7f0c3f6b-8fae-5cdd-6ce2-916ea6f7146a",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7/options",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576322297352,
+			"name": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a8/options",
+			"description": "",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"responses": [],
+			"rawModeData": " {\n            \"id\": \"145eab89-651b-453d-8485-c1b4409cac92\",\n            \"name\": \"PS4\",\n            \"description\": \"Console platform\"\n        }"
+		},
+		{
+			"id": "8fd1411a-d190-48e7-e3b4-fcf0fc222f5e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7/options/145eab89-651b-453d-8485-c1b4409cac92",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576322624392,
+			"name": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a8/options",
+			"description": "",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"responses": [],
+			"rawModeData": " {\n            \"id\": \"145eab89-651b-453d-8485-c1b4409cac92\",\n            \"name\": \"PS4\",\n            \"description\": \"Console platform 3\"\n        }"
+		},
+		{
+			"id": "ed179a2e-981e-a3f5-0732-daf2f75575fd",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7/options/145eab89-651b-453d-8485-c1b4409cac92",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "DELETE",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1576322662037,
+			"name": "https://localhost:44381/api/products/8f5e9176-35ff-4f0a-ae55-83023d2fb5a7/options/145eab89-651b-453d-8485-c1b4409cac91",
+			"description": "",
+			"collectionId": "2fa01ee9-0197-5651-be0b-cf6a00788865",
+			"responses": [],
+			"rawModeData": " {\n            \"id\": \"145eab89-651b-453d-8485-c1b4409cac91\",\n            \"name\": \"PS4\",\n            \"description\": \"Console platform\"\n        }"
+		}
+	]
+}
