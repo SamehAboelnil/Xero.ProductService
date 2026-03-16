@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.1" />
     <ProjectReference Include="..\XERO.Product.Data\Xero.Product.Data.csproj" />
   </ItemGroup>
 
